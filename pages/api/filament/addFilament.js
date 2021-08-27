@@ -19,8 +19,8 @@ const connectDB = async () => {
 export default async (req, res) => {
 
     await connectDB();
-    console.log(req.body)
-    const newFilament = new Filament(req.body)
+
+    const newFilament = new Filament(JSON.parse(req.body))
 
     const createdFilament = await newFilament.save()
 

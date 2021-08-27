@@ -22,11 +22,14 @@ const filamentSchema = mongoose.Schema({
     weight: {
         type: Number,
         default: 0
+    },
+    userId: {
+        type: String
     }
-}, 
-{
-    timestamps: true,
-})
+},
+    {
+        timestamps: true,
+    })
 
 // Do I have a model already? Make a new one if I don't
 module.exports = mongoose.models.filament || mongoose.model('filament', filamentSchema);

@@ -17,13 +17,15 @@ const connectDB = async () => {
 }
 
 export default async (req, res) => {
+    console.log(req.body)
     try {
-        const { user } = await getSession(req, res);
+        //const { user } = await getSession(req, res);
 
         await connectDB();
         const { id } = req.query
-        const { type, color, length, diameter, weight } = req.body
-
+        const request = JSON.parse(req.body)
+        const { type, color, length, diameter, weight } = request
+        console.log(type, color, length, diameter, weight, id)
         const filament = await Filament.findById(id)
 
         if (filament) {

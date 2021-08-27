@@ -16,13 +16,14 @@ const connectDB = async () => {
     }
 }
 
-const getPrints = async () => {
-    const prints = await Print.find({})
+const getPrints = async (id) => {
+    const prints = await Print.find({ userId: id })
     return prints;
 }
 
 export default async (req, res) => {
     await connectDB();
-    const allPrints = await getPrints()
+    var id = req.query.userId
+    const allPrints = await getPrints(id)
     res.status(200).json(allPrints)
 }

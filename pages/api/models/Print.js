@@ -23,7 +23,7 @@ const printSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    user: {
+    userId: {
         type: String
     }
 }, 

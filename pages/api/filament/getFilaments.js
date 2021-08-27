@@ -16,13 +16,16 @@ const connectDB = async () => {
     }
 }
 
-const getFilaments = async () => {
-    const filaments = await Filament.find({})
+const getFilaments = async (id) => {
+    const filaments = await Filament.find({ userId: id })
+    console.log(filaments)
     return filaments;
 }
 
 export default async (req, res) => {
     await connectDB();
-    const allFilaments = await getFilaments()
+    var id = req.query.userId
+    console.log(id)
+    const allFilaments = await getFilaments(id)
     res.status(200).json(allFilaments)
 }

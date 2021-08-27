@@ -21,7 +21,7 @@ export default async (req, res) => {
 
         await connectDB();
         const { id } = req.query
-        const { name, description, filament, duration, weight, user} = req.body
+        const { name, description, filament, duration, weight, user } = JSON.parse(req.body)
 
         const print = await Print.findById(id)
 
@@ -33,10 +33,10 @@ export default async (req, res) => {
             print.duration = duration
             print.weight = weight
             print.user = user
-            
+
 
             const updatedPrint = await print.save()
-            res.status(200).json( updatedPrint)
+            res.status(200).json(updatedPrint)
         } else {
             res.status(404).json({ message: "Print not found 😩" })
         }

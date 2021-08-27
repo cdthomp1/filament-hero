@@ -15,29 +15,36 @@ const fetcher = async (...args) => {
     return data
 }
 
-export default function FilamentTable({ user }) {
+export default function PrintsTable({ user }) {
 
 
+
+    const { data: printsData, error: printsError } = useSWR(`/api/print/getPrints?userId=${user.sub}`, fetcher)
+
+    console.log(printsData)
 
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
 
+    console.log(filamentsData)
 
     const [addFormData, setAddFormData] = useState({
-        type: "",
-        color: "",
+        name: "",
+        description: "",
+        filament: "",
+        duration: 0,
         weight: 0,
-        diameter: 0,
-        weight: 0
+        userId: ""
     });
 
-    const [editFilamentData, setEditFormData] = useState({
-        type: "",
-        color: "",
+    const [editPrintData, setEditFormData] = useState({
+        name: "",
+        description: "",
+        filament: "",
+        duration: 0,
         weight: 0,
-        diameter: 0,
-        weight: 0
+        userId: ""
     });
-    const [editFilamentId, setEditFilamentId] = useState(null);
+    const [editPrintId, SetEditPrintId] = useState(null);
 
     const handleAddFormChange = (event) => {
         event.preventDefault();
@@ -55,7 +62,9 @@ export default function FilamentTable({ user }) {
         event.preventDefault();
         const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value;
-        const newFormData = { ...editFilamentData };
+        console.log(...editPrintData)
+        const newFormData = { ...editPrintData };
+        console.log(newFormData)
         newFormData[fieldName] = fieldValue;
 
         setEditFormData(newFormData);
@@ -63,102 +72,102 @@ export default function FilamentTable({ user }) {
 
     const handleAddFormSubmit = async (event) => {
         event.preventDefault();
-        let newFilament
+        let newPrint;
         if (user) {
-            newFilament = {
-                type: addFormData.type,
-                color: addFormData.color,
-                weight: addFormData.weight,
-                diameter: addFormData.diameter,
-                length: addFormData.length,
+            newPrint = {
+                name: addFormData.name,
+                description: addFormData.color,
+                filament: addFormData.weight,
+                duration: addFormData.diameter,
+                weight: addFormData.length,
                 userId: user.sub
             };
         }
 
 
-        console.log(newFilament)
+        console.log(newPrint)
 
-        await fetcher("/api/filament/addFilament", {
+        await fetcher("/api/print/addPrint", {
             method: "post",
-            body: JSON.stringify(newFilament)
+            body: JSON.stringify(newPrint)
         });
 
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
+        mutate(`/api/print/getPrints?userId=${user.sub}`);
 
     };
 
     const handleEditFormSubmit = async () => {
-        await fetcher("/api/filament/updateFilament?id=" + editFilamentId, {
+        await fetcher("/api/print/updatePrint?id=" + editPrintId, {
             method: "put",
-            body: JSON.stringify(editFilamentData)
+            body: JSON.stringify(editPrintData)
         });
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-        setEditFilamentId(null);
+        mutate(`/api/print/getPrints?userId=${user.sub}`);
+        SetEditPrintId(null);
     };
 
-    const handleEditClick = (event, filament) => {
+    const handleEditClick = (event, print) => {
         event.preventDefault();
-        setEditFilamentId(filament._id);
+        SetEditPrintId(print._id);
 
         const formValues = {
-            type: filament.type,
-            color: filament.color,
-            length: filament.length,
-            diameter: filament.diameter,
-            weight: filament.weight,
+            name: print.name,
+            description: print.description,
+            filament: print.filament,
+            duration: print.duration,
+            weight: print.weight,
         };
 
         setEditFormData(formValues);
     };
 
     const handleCancelClick = () => {
-        setEditFilamentId(null);
+        SetEditPrintId(null);
     };
 
-    const handleDeleteClick = async (filamentId) => {
-        const res = await fetcher("/api/filament/deleteFilament", {
+    const handleDeleteClick = async (printId) => {
+        const res = await fetcher("/api/print/deletePrint", {
             method: "delete",
-            body: JSON.stringify({ id: filamentId })
+            body: JSON.stringify({ id: printId })
         });
 
 
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
+        mutate(`/api/print/getPrints?userId=${user.sub}`);
 
     };
 
 
 
 
-    if (filamentsError) return <div>{filamentsError.message}</div>
-    if (!filamentsData) return <div>Loading...</div>
+    if (printsError) return <div>{printsError.message}</div>
+    if (!printsData) return <div>Loading...</div>
 
     return (
         <div className="flex flex-col items-center w-full">
-            <h1 className="text-5xl m-3">Filament</h1>
-            {filamentsData.length > 0 ?
+            <h1 className="text-5xl m-3">Prints</h1>
+            {printsData.length > 0 ?
                 <><table className="shadow-lg border-collapse border w-9/12 table-fixed mb-4">
                     <thead>
                         <tr>
-                            <th className="bg-blue-100 border text-xl">Type</th>
-                            <th className="bg-blue-100 border text-xl">Color</th>
-                            <th className="bg-blue-100 border text-xl">Weight</th>
-                            <th className="bg-blue-100 border text-xl">Diameter</th>
-                            <th className="bg-blue-100 border text-xl ">Length</th>
+                            <th className="bg-blue-100 border text-xl">Name</th>
+                            <th className="bg-blue-100 border text-xl">Description</th>
+                            <th className="bg-blue-100 border text-xl">Filament</th>
+                            <th className="bg-blue-100 border text-xl">Duration</th>
+                            <th className="bg-blue-100 border text-xl ">Weight</th>
                             <th className="bg-blue-100 border text-xl "></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filamentsData.map((filament, index) => {
+                        {printsData.map((print, index) => {
                             return (
-                                <Fragment key={index}> {editFilamentId !== filament._id ? (
+                                <Fragment key={index}> {editPrintId !== print._id ? (
                                     <tr className='even:bg-gray-100'>
-                                        <td className="text-center">{filament.type}</td>
-                                        <td className="text-center">{filament.color}</td>
-                                        <td className="text-center">{filament.weight}</td>
-                                        <td className="text-center">{filament.diameter}</td>
-                                        <td className="text-center">{filament.length}</td>
-                                        <td className="text-center "><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, filament)}
-                                            icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(filament._id)} icon={faDumpster} /></td>
+                                        <td className="text-center">{print.name}</td>
+                                        <td className="text-center">{print.description}</td>
+                                        <td className="text-center">{print.filament}</td>
+                                        <td className="text-center">{print.duration}</td>
+                                        <td className="text-center">{print.weight}</td>
+                                        <td className="text-center "><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, print)}
+                                            icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(print._id)} icon={faDumpster} /></td>
                                     </tr>) :
                                     (<tr key={index}>
                                         <td className="text-center">
@@ -166,9 +175,9 @@ export default function FilamentTable({ user }) {
                                                 className="border"
                                                 type="text"
                                                 required="required"
-                                                placeholder="Enter a type..."
-                                                name="type"
-                                                value={editFilamentData.type}
+                                                placeholder="Enter a name..."
+                                                name="name"
+                                                value={editPrintData.name}
                                                 onChange={handleEditFormChange}
                                             ></input>
                                         </td>
@@ -177,9 +186,33 @@ export default function FilamentTable({ user }) {
                                                 className="border"
                                                 type="text"
                                                 required="required"
-                                                placeholder="Enter a color..."
-                                                name="color"
-                                                value={editFilamentData.color}
+                                                placeholder="Enter a description..."
+                                                name="description"
+                                                value={editPrintData.description}
+                                                onChange={handleEditFormChange}
+                                            ></input>
+                                        </td>
+                                        <td className="text-center">
+                                            <select
+                                                className="border"
+                                                required="required"
+                                                name="filament"
+                                                onChange={handleEditFormChange}
+                                            >
+                                                {filamentsData.map((filament, index) => {
+                                                    console.log("HELLO")
+                                                    return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                                                })}
+                                            </select>
+                                        </td>
+                                        <td className="text-center">
+                                            <input
+                                                className="border"
+                                                type="number"
+                                                required="required"
+                                                placeholder="Enter a duration..."
+                                                name="duration"
+                                                value={editPrintData.duration}
                                                 onChange={handleEditFormChange}
                                             ></input>
                                         </td>
@@ -187,35 +220,10 @@ export default function FilamentTable({ user }) {
                                             <input
                                                 className="border"
                                                 type="number"
-                                                step="0.01"
                                                 required="required"
-                                                placeholder="Enter weight..."
+                                                placeholder="Enter a weight..."
                                                 name="weight"
-                                                value={editFilamentData.weight}
-                                                onChange={handleEditFormChange}
-                                            ></input>
-                                        </td>
-                                        <td className="text-center">
-                                            <input
-                                                className="border"
-                                                type="number"
-                                                step="0.01"
-                                                required="required"
-                                                placeholder="Enter diameter..."
-                                                name="diameter"
-                                                value={editFilamentData.diameter}
-                                                onChange={handleEditFormChange}
-                                            ></input>
-                                        </td>
-                                        <td className="text-center">
-                                            <input
-                                                className="border"
-                                                type="number"
-                                                step="0.01"
-                                                required="required"
-                                                placeholder="Enter an length..."
-                                                name="length"
-                                                value={editFilamentData.length}
+                                                value={editPrintData.weight}
                                                 onChange={handleEditFormChange}
                                             ></input>
                                         </td>
@@ -235,7 +243,7 @@ export default function FilamentTable({ user }) {
                 </table>
                     <form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
                         <input
-                            className="border p-1"
+                            className="border"
                             type="text"
                             name="type"
                             required="required"
@@ -243,7 +251,7 @@ export default function FilamentTable({ user }) {
                             onChange={handleAddFormChange}
                         />
                         <input
-                            className="border p-1"
+                            className="border"
                             type="text"
                             name="color"
                             required="required"
@@ -251,7 +259,7 @@ export default function FilamentTable({ user }) {
                             onChange={handleAddFormChange}
                         />
                         <input
-                            className="border p-1"
+                            className="border"
                             type="number"
                             step="0.01"
                             name="weight"
@@ -260,7 +268,7 @@ export default function FilamentTable({ user }) {
                             onChange={handleAddFormChange}
                         />
                         <input
-                            className="border p-1"
+                            className="border"
                             type="number"
                             step="0.01"
                             name="diameter"
@@ -269,7 +277,7 @@ export default function FilamentTable({ user }) {
                             onChange={handleAddFormChange}
                         />
                         <input
-                            className="border p-1"
+                            className="border"
                             type="number"
                             step="0.01"
                             name="length"
@@ -277,12 +285,12 @@ export default function FilamentTable({ user }) {
                             placeholder="Enter a length..."
                             onChange={handleAddFormChange}
                         />
-                        <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Filament</button>
+                        <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
                     </form></>
                 :
-                <><p>Add Some Filament!</p><form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
+                <><p>Add a Print!</p><form className="flex flex-row w-12/12" onSubmit={handleAddFormSubmit}>
                     <input
-                        className="border p-1"
+                        className="border"
                         type="text"
                         name="type"
                         required="required"
@@ -290,7 +298,7 @@ export default function FilamentTable({ user }) {
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border"
                         type="text"
                         name="color"
                         required="required"
@@ -298,33 +306,31 @@ export default function FilamentTable({ user }) {
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border"
                         type="number"
                         name="weight"
-                        step="0.01"
                         required="required"
                         placeholder="Enter a weight..."
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border"
                         type="number"
                         name="diameter"
-                        step="0.01"
                         required="required"
                         placeholder="Enter a diameter..."
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border"
                         type="number"
                         name="length"
-                        step="0.01"
                         required="required"
                         placeholder="Enter a length..."
                         onChange={handleAddFormChange}
                     />
-                    <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Filament</button>
+
+                    <button type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
                 </form></>}
 
         </div>

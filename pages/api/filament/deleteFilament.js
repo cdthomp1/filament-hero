@@ -19,10 +19,11 @@ const connectDB = async () => {
 export default async (req, res) => {
 
 
-    const id = req.body.id
+    const { id } = JSON.parse(req.body)
 
+    console.log(id)
     const foundFilament = await Filament.findById(id)
-
+    console.log(foundFilament)
     if (foundFilament) {
         await foundFilament.remove()
         res.status(200).json({ message: "Filament Successfully Deleted 🎉" })
