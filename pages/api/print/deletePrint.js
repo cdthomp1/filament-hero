@@ -19,7 +19,8 @@ const connectDB = async () => {
 export default async (req, res) => {
 
 
-    const id = req.body.id
+    const { id } = JSON.parse(req.body)
+    console.log(id)
 
     const foundPrint = await Print.findById(id)
 

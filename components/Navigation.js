@@ -15,7 +15,7 @@ function classNames(...classes) {
 export default function Navigation() {
     const { user, error, isLoading } = useUser();
     return (
-        <Disclosure as="nav" className="bg-gray-200">
+        <Disclosure as="nav" className="bg-regal-blue">
             {({ open }) => (
                 <>
                     <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -38,11 +38,9 @@ export default function Navigation() {
                                         src="https://cameronthompson.io/images/filament-tracker-logo.svg"
                                         alt="Workflow"
                                     />
-                                    <img
-                                        className="hidden lg:block h-11 w-auto"
-                                        src="https://cameronthompson.io/images/filament-tracker-logo-full.svg"
-                                        alt="Workflow"
-                                    />
+                                    <h1
+                                        className="hidden lg:block h-11 w-auto "
+                                    >Filament<br />Tracker</h1>
                                 </div>
                                 <div className="hidden sm:block sm:ml-6">
                                     <div className="flex space-x-4">
@@ -51,7 +49,7 @@ export default function Navigation() {
                                                 key={item.name}
                                                 href={item.href}
                                                 className={classNames(
-                                                    item.current ? 'bg-gray-900 text-white' : 'text-black-300 hover:bg-gray-700 hover:text-white',
+                                                    item.current ? 'bg-gray-300 text-white' : 'text-black-300 hover:bg-gray-700 hover:text-white',
                                                     'px-3 py-2 rounded-md text-sm font-medium'
                                                 )}
                                                 aria-current={item.current ? 'page' : undefined}
@@ -88,7 +86,7 @@ export default function Navigation() {
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                         <a
-                                                            href="#"
+                                                            href="/profile"
                                                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                                         >
                                                             Your Profile
@@ -129,7 +127,7 @@ export default function Navigation() {
                                     key={item.name}
                                     href={item.href}
                                     className={classNames(
-                                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                        item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white',
                                         'block px-3 py-2 rounded-md text-base font-medium'
                                     )}
                                     aria-current={item.current ? 'page' : undefined}

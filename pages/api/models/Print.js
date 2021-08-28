@@ -11,7 +11,11 @@ const printSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    filament: {
+    filamentId: {
+        type: String,
+        required: true
+    },
+    filamentName: {
         type: String,
         required: true
     },
@@ -26,10 +30,10 @@ const printSchema = mongoose.Schema({
     userId: {
         type: String
     }
-}, 
-{
-    timestamps: true,
-})
+},
+    {
+        timestamps: true,
+    })
 
 // Do I have a model already? Make a new one if I don't
 module.exports = mongoose.models.print || mongoose.model('print', printSchema);

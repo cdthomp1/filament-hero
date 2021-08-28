@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 
-
 const fetcher = async (...args) => {
     const res = await fetch(...args)
     const data = await res.json()
@@ -16,21 +15,14 @@ const fetcher = async (...args) => {
 }
 
 export default function PrintsTable({ user }) {
-
-
-
     const { data: printsData, error: printsError } = useSWR(`/api/print/getPrints?userId=${user.sub}`, fetcher)
-
-    console.log(printsData)
-
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
-
-    console.log(filamentsData)
 
     const [addFormData, setAddFormData] = useState({
         name: "",
         description: "",
-        filament: "",
+        filamentId: "",
+        filamentName: "",
         duration: 0,
         weight: 0,
         userId: ""
@@ -39,7 +31,8 @@ export default function PrintsTable({ user }) {
     const [editPrintData, setEditFormData] = useState({
         name: "",
         description: "",
-        filament: "",
+        filamentId: "",
+        filamentName: "",
         duration: 0,
         weight: 0,
         userId: ""
@@ -55,6 +48,7 @@ export default function PrintsTable({ user }) {
         const newFormData = { ...addFormData };
         newFormData[fieldName] = fieldValue;
 
+
         setAddFormData(newFormData);
     };
 
@@ -62,9 +56,9 @@ export default function PrintsTable({ user }) {
         event.preventDefault();
         const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value;
-        console.log(...editPrintData)
+
         const newFormData = { ...editPrintData };
-        console.log(newFormData)
+
         newFormData[fieldName] = fieldValue;
 
         setEditFormData(newFormData);
@@ -73,26 +67,42 @@ export default function PrintsTable({ user }) {
     const handleAddFormSubmit = async (event) => {
         event.preventDefault();
         let newPrint;
+
         if (user) {
+            let filament = filamentsData.find(filament => filament._id === addFormData.filament)
             newPrint = {
                 name: addFormData.name,
-                description: addFormData.color,
-                filament: addFormData.weight,
-                duration: addFormData.diameter,
-                weight: addFormData.length,
+                description: addFormData.description,
+                filamentId: addFormData.filament,
+                filamentName: `${filament.type} ${filament.color} `,
+                duration: addFormData.duration,
+                weight: addFormData.weight,
                 userId: user.sub
             };
         }
 
-
-        console.log(newPrint)
+        var printFilament = await fetcher("/api/filament/getFilament?id=" + newPrint.filamentId)
+        var updatedFilament = {
+            type: printFilament.type,
+            color: printFilament.color,
+            length: printFilament.length,
+            diameter: printFilament.diameter,
+            weight: printFilament.weight - newPrint.weight,
+            userId: printFilament.userId
+        }
 
         await fetcher("/api/print/addPrint", {
             method: "post",
             body: JSON.stringify(newPrint)
         });
 
+        await fetcher("/api/filament/updateFilament?id=" + printFilament._id, {
+            method: "put",
+            body: JSON.stringify(updatedFilament)
+        });
+
         mutate(`/api/print/getPrints?userId=${user.sub}`);
+        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
 
     };
 
@@ -112,7 +122,8 @@ export default function PrintsTable({ user }) {
         const formValues = {
             name: print.name,
             description: print.description,
-            filament: print.filament,
+            filamentId: addFormData.filament,
+            filamentName: filamentsData.where(filament => filament._id === addFormData.filament),
             duration: print.duration,
             weight: print.weight,
         };
@@ -135,15 +146,52 @@ export default function PrintsTable({ user }) {
 
     };
 
+    if (printsError || filamentsError) return <div>{printsError.message || filamentsError.message}</div>
+    if (!printsData || !filamentsData) return (
+        <table class="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
+            <thead>
+                <tr>
+                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr className="h-4 even:bg-gray-100 ">
+                    <td className="h-4">&nbsp;</td>
+                    <td className="h-4">&nbsp;</td>
+                    <td className="h-4">&nbsp;</td>
+                    <td className="h-4">&nbsp;</td>
+                    <td className="h-4">&nbsp;</td>
+                    <td className="h-4">&nbsp;</td>
+                </tr>
+                <tr className="h-4 even:bg-gray-100 ">
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                </tr>
+                <tr className="h-4 even:bg-gray-100 ">
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                    <td className="h-4 ">&nbsp;</td>
+                </tr>
 
+            </tbody>
+        </table>
+    )
 
-
-    if (printsError) return <div>{printsError.message}</div>
-    if (!printsData) return <div>Loading...</div>
 
     return (
         <div className="flex flex-col items-center w-full">
-            <h1 className="text-5xl m-3">Prints</h1>
             {printsData.length > 0 ?
                 <><table className="shadow-lg border-collapse border w-9/12 table-fixed mb-4">
                     <thead>
@@ -163,7 +211,7 @@ export default function PrintsTable({ user }) {
                                     <tr className='even:bg-gray-100'>
                                         <td className="text-center">{print.name}</td>
                                         <td className="text-center">{print.description}</td>
-                                        <td className="text-center">{print.filament}</td>
+                                        <td className="text-center">{print.filamentName}</td>
                                         <td className="text-center">{print.duration}</td>
                                         <td className="text-center">{print.weight}</td>
                                         <td className="text-center "><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, print)}
@@ -197,10 +245,11 @@ export default function PrintsTable({ user }) {
                                                 className="border"
                                                 required="required"
                                                 name="filament"
+                                                value={filamentsData[0]._id}
                                                 onChange={handleEditFormChange}
                                             >
                                                 {filamentsData.map((filament, index) => {
-                                                    console.log("HELLO")
+                                                    //console.log("HELLO")
                                                     return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
                                                 })}
                                             </select>
@@ -245,17 +294,38 @@ export default function PrintsTable({ user }) {
                         <input
                             className="border"
                             type="text"
-                            name="type"
+                            name="name"
                             required="required"
-                            placeholder="Enter a type..."
+                            placeholder="Enter a print name..."
                             onChange={handleAddFormChange}
                         />
                         <input
                             className="border"
                             type="text"
-                            name="color"
+                            name="description"
                             required="required"
-                            placeholder="Enter a color..."
+                            placeholder="Enter a description..."
+                            onChange={handleAddFormChange}
+                        />
+                        <select
+                            className="border"
+                            required="required"
+                            name="filament"
+                            placeholder="Filament"
+                            onChange={handleAddFormChange}
+                        >
+                            <option value="" selected disabled hidden>Filament</option>
+                            {filamentsData.map((filament, index) => {
+                                return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                            })}
+                        </select>
+                        <input
+                            className="border"
+                            type="number"
+                            required="required"
+                            placeholder="Enter a duration..."
+                            name="duration"
+
                             onChange={handleAddFormChange}
                         />
                         <input
@@ -267,70 +337,57 @@ export default function PrintsTable({ user }) {
                             placeholder="Enter a weight..."
                             onChange={handleAddFormChange}
                         />
-                        <input
-                            className="border"
-                            type="number"
-                            step="0.01"
-                            name="diameter"
-                            required="required"
-                            placeholder="Enter a diameter..."
-                            onChange={handleAddFormChange}
-                        />
-                        <input
-                            className="border"
-                            type="number"
-                            step="0.01"
-                            name="length"
-                            required="required"
-                            placeholder="Enter a length..."
-                            onChange={handleAddFormChange}
-                        />
                         <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
                     </form></>
                 :
-                <><p>Add a Print!</p><form className="flex flex-row w-12/12" onSubmit={handleAddFormSubmit}>
+                <><p className="m-4">Add a Print!</p><form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
                     <input
                         className="border"
                         type="text"
-                        name="type"
+                        name="name"
                         required="required"
-                        placeholder="Enter a type..."
+                        placeholder="Enter a print name..."
                         onChange={handleAddFormChange}
                     />
                     <input
                         className="border"
                         type="text"
-                        name="color"
+                        name="description"
                         required="required"
-                        placeholder="Enter a color..."
+                        placeholder="Enter a description..."
+                        onChange={handleAddFormChange}
+                    />
+                    <select
+                        className="border w-40"
+                        required="required"
+                        name="filament"
+                        placeholder="Filament"
+                        onChange={handleAddFormChange}
+                    >
+                        <option value="" selected disabled hidden>Filament</option>
+                        {filamentsData.map((filament, index) => {
+                            return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                        })}
+                    </select>
+                    <input
+                        className="border"
+                        type="number"
+                        required="required"
+                        placeholder="Enter a duration..."
+                        name="duration"
+
                         onChange={handleAddFormChange}
                     />
                     <input
                         className="border"
                         type="number"
+                        step="0.01"
                         name="weight"
                         required="required"
                         placeholder="Enter a weight..."
                         onChange={handleAddFormChange}
                     />
-                    <input
-                        className="border"
-                        type="number"
-                        name="diameter"
-                        required="required"
-                        placeholder="Enter a diameter..."
-                        onChange={handleAddFormChange}
-                    />
-                    <input
-                        className="border"
-                        type="number"
-                        name="length"
-                        required="required"
-                        placeholder="Enter a length..."
-                        onChange={handleAddFormChange}
-                    />
-
-                    <button type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
+                    <button className="bg-gray-200 rounded p-1 hover:bg-green-400 w-20" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
                 </form></>}
 
         </div>

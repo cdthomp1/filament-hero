@@ -76,7 +76,7 @@ export default function FilamentTable({ user }) {
         }
 
 
-        console.log(newFilament)
+        //console.log(newFilament)
 
         await fetcher("/api/filament/addFilament", {
             method: "post",
@@ -130,11 +130,48 @@ export default function FilamentTable({ user }) {
 
 
     if (filamentsError) return <div>{filamentsError.message}</div>
-    if (!filamentsData) return <div>Loading...</div>
+    if (!filamentsData) return (<table class="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
+        <thead>
+            <tr>
+                <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                <th className="bg-gray-500 border text-xl">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr className="h-4 even:bg-gray-100 ">
+                <td className="h-4">&nbsp;</td>
+                <td className="h-4">&nbsp;</td>
+                <td className="h-4">&nbsp;</td>
+                <td className="h-4">&nbsp;</td>
+                <td className="h-4">&nbsp;</td>
+                <td className="h-4">&nbsp;</td>
+            </tr>
+            <tr className="h-4 even:bg-gray-100 ">
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+            </tr>
+            <tr className="h-4 even:bg-gray-100 ">
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+                <td className="h-4 ">&nbsp;</td>
+            </tr>
+
+        </tbody>
+    </table>)
 
     return (
         <div className="flex flex-col items-center w-full">
-            <h1 className="text-5xl m-3">Filament</h1>
             {filamentsData.length > 0 ?
                 <><table className="shadow-lg border-collapse border w-9/12 table-fixed mb-4">
                     <thead>
@@ -170,7 +207,7 @@ export default function FilamentTable({ user }) {
                                                 name="type"
                                                 value={editFilamentData.type}
                                                 onChange={handleEditFormChange}
-                                            ></input>
+                                            />
                                         </td>
                                         <td className="text-center">
                                             <input
@@ -181,7 +218,7 @@ export default function FilamentTable({ user }) {
                                                 name="color"
                                                 value={editFilamentData.color}
                                                 onChange={handleEditFormChange}
-                                            ></input>
+                                            />
                                         </td>
                                         <td className="text-center">
                                             <input
@@ -189,11 +226,11 @@ export default function FilamentTable({ user }) {
                                                 type="number"
                                                 step="0.01"
                                                 required="required"
-                                                placeholder="Enter weight..."
+                                                placeholder="Enter weight (grams)"
                                                 name="weight"
                                                 value={editFilamentData.weight}
                                                 onChange={handleEditFormChange}
-                                            ></input>
+                                            />
                                         </td>
                                         <td className="text-center">
                                             <input
@@ -205,7 +242,7 @@ export default function FilamentTable({ user }) {
                                                 name="diameter"
                                                 value={editFilamentData.diameter}
                                                 onChange={handleEditFormChange}
-                                            ></input>
+                                            />
                                         </td>
                                         <td className="text-center">
                                             <input
@@ -217,7 +254,7 @@ export default function FilamentTable({ user }) {
                                                 name="length"
                                                 value={editFilamentData.length}
                                                 onChange={handleEditFormChange}
-                                            ></input>
+                                            />
                                         </td>
                                         <td className="text-center">
                                             <button
@@ -228,7 +265,6 @@ export default function FilamentTable({ user }) {
                                             </button>
                                         </td>
                                     </tr>)}
-
                                 </Fragment>)
                         })}
                     </tbody>
@@ -280,13 +316,13 @@ export default function FilamentTable({ user }) {
                         <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Filament</button>
                     </form></>
                 :
-                <><p>Add Some Filament!</p><form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
+                <><p className="m-5">Add Some Filament!</p><form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
                     <input
                         className="border p-1"
                         type="text"
                         name="type"
                         required="required"
-                        placeholder="Enter a type..."
+                        placeholder="Type"
                         onChange={handleAddFormChange}
                     />
                     <input
@@ -294,7 +330,7 @@ export default function FilamentTable({ user }) {
                         type="text"
                         name="color"
                         required="required"
-                        placeholder="Enter a color..."
+                        placeholder="Color"
                         onChange={handleAddFormChange}
                     />
                     <input
@@ -303,7 +339,7 @@ export default function FilamentTable({ user }) {
                         name="weight"
                         step="0.01"
                         required="required"
-                        placeholder="Enter a weight..."
+                        placeholder="Weight (Grams)"
                         onChange={handleAddFormChange}
                     />
                     <input
@@ -312,7 +348,7 @@ export default function FilamentTable({ user }) {
                         name="diameter"
                         step="0.01"
                         required="required"
-                        placeholder="Enter a diameter..."
+                        placeholder="Diameter"
                         onChange={handleAddFormChange}
                     />
                     <input
@@ -320,8 +356,7 @@ export default function FilamentTable({ user }) {
                         type="number"
                         name="length"
                         step="0.01"
-                        required="required"
-                        placeholder="Enter a length..."
+                        placeholder="Length (mm)"
                         onChange={handleAddFormChange}
                     />
                     <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Filament</button>

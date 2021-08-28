@@ -20,22 +20,23 @@ const fetcher = async (url) => {
 export default withPageAuthRequired(function dashboard({ user }) {
 
 
-    const { data: prints, error: printsError } = useSWR(`/api/print/getPrints`, fetcher)
+    const { data: filaments, error: filamentsError } = useSWR(`/api/filament/getFilaments?id=${user.sub}`, fetcher)
 
 
-    if (printsError) return <div>{printsError.message}</div>
-    if (!prints) return <div>Loading...</div>
-
-
+    if (filamentsError) return <div>{filamentsError.message}</div>
+    if (!filaments) return <div>Loading...</div>
 
     return (
         <>
-            <div>
+            <div className="flex flex-col items-center w-full mt-6">
+                <h1 className="text-5xl m-3">Filaments</h1>
                 <FilamentTable user={user} />
             </div>
+            <div className="flex flex-col items-center w-full mt-6">
+                <h1 className="text-5xl m-3">Prints</h1>
 
-            <div>
                 <PrintsTable user={user} />
+
             </div>
         </>
     )

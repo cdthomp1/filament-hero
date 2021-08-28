@@ -4,10 +4,8 @@ import { faDumpster } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>Filament Tracker</h1>
-      <a href="/api/auth/login">Login</a>
-      <FontAwesomeIcon icon={faDumpster} />
+    <div className="flex flex-col items-center justify-center py-2">
+      <h1 className="2xl:text-6xl xl:text-6xl lg:text-5xl md:text-5xl sm:text-4xl text-4xl mt-10">Filament Tracker</h1>
     </div>
   )
 }

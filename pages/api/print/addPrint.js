@@ -8,7 +8,7 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useCreateIndex: true
         })
-        console.log(`MongoDB Connect: ${conn.connection.host}`)
+       
 
     } catch (err) {
         console.error(`Error: ${err.message}`);
@@ -20,7 +20,7 @@ export default async (req, res) => {
 
     await connectDB();
     console.log(req.body)
-    const newPrint = new Print(req.body)
+    const newPrint = new Print(JSON.parse(req.body))
 
     const createdPrint = await newPrint.save()
 
