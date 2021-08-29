@@ -34,23 +34,25 @@ export default function Navigation() {
                             <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                                 <div className="flex-shrink-0 flex items-center">
                                     <img
-                                        className="block lg:hidden h-8 w-auto"
-                                        src="https://cameronthompson.io/images/filament-tracker-logo.svg"
+                                        className="block lg:hidden h-12 w-auto"
+                                        src="./filament-hero-icon.svg"
                                         alt="Workflow"
                                     />
-                                    <h1
-                                        className="hidden lg:block h-11 w-auto "
-                                    >Filament<br />Tracker</h1>
+                                    <img
+                                        className="hidden lg:block h-20 w-auto"
+                                        src="./filament-hero.svg"
+                                        alt="Workflow"
+                                    />
                                 </div>
                                 <div className="hidden sm:block sm:ml-6">
-                                    <div className="flex space-x-4">
+                                    <div className="flex items-center space-x-4 h-20">
                                         {navigation.map((item) => (
                                             <a
                                                 key={item.name}
                                                 href={item.href}
                                                 className={classNames(
-                                                    item.current ? 'bg-gray-300 text-white' : 'text-black-300 hover:bg-gray-700 hover:text-white',
-                                                    'px-3 py-2 rounded-md text-sm font-medium'
+                                                    item.current ? 'bg-gray-300 text-white' : 'text-white hover:bg-gray-500 hover:text-white',
+                                                    'px-3  rounded-md text-xl font-medium'
                                                 )}
                                                 aria-current={item.current ? 'page' : undefined}
                                             >
@@ -67,7 +69,7 @@ export default function Navigation() {
                                             <Menu.Button className="bg-gray-800 flex  text-sm rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white text-white">
                                                 <span className="sr-only">Open user menu</span>
                                                 <img
-                                                    className="h-9 w-9 rounded m-y-auto"
+                                                    className="h-11 w-11 rounded m-y-auto"
                                                     src={user.picture}
                                                     alt=""
                                                 />
@@ -115,7 +117,7 @@ export default function Navigation() {
                                                 </Menu.Item>
                                             </Menu.Items>
                                         </Transition>
-                                    </Menu> : <a href="/api/auth/login">Login</a>}
+                                    </Menu> : <a href="/api/auth/login" className="text-white text-xl">Login</a>}
                             </div>
                         </div>
                     </div>
@@ -127,7 +129,7 @@ export default function Navigation() {
                                     key={item.name}
                                     href={item.href}
                                     className={classNames(
-                                        item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white',
+                                        item.current ? 'bg-gray-900 text-white' : 'text-white hover:bg-gray-700 hover:text-white',
                                         'block px-3 py-2 rounded-md text-base font-medium'
                                     )}
                                     aria-current={item.current ? 'page' : undefined}
