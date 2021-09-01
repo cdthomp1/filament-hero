@@ -19,8 +19,13 @@ export default function FilamentTable({ user }) {
 
 
 
-    const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
+    //const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
 
+    const filamentsData = []
+
+    /* const filamentsData = undefined */
+
+    const filamentsError = false
 
     const [addFormData, setAddFormData] = useState({
         type: "",
@@ -316,9 +321,9 @@ export default function FilamentTable({ user }) {
                         <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Filament</button>
                     </form></>
                 :
-                <><p className="m-5">Add Some Filament!</p><form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
+                <><p className="m-5">Add Some Filament!</p><form className="flex flex-col lg:flex-row md:flex-col sm:flex-col w-10/12 justify-evenly" onSubmit={handleAddFormSubmit}>
                     <input
-                        className="border p-1"
+                        className="border max-w-1/8"
                         type="text"
                         name="type"
                         required="required"
@@ -326,7 +331,7 @@ export default function FilamentTable({ user }) {
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border max-w-1/8"
                         type="text"
                         name="color"
                         required="required"
@@ -334,7 +339,7 @@ export default function FilamentTable({ user }) {
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border max-w-1/8"
                         type="number"
                         name="weight"
                         step="0.01"
@@ -343,7 +348,7 @@ export default function FilamentTable({ user }) {
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border max-w-1/8"
                         type="number"
                         name="diameter"
                         step="0.01"
@@ -352,7 +357,7 @@ export default function FilamentTable({ user }) {
                         onChange={handleAddFormChange}
                     />
                     <input
-                        className="border p-1"
+                        className="border max-w-1/8"
                         type="number"
                         name="length"
                         step="0.01"

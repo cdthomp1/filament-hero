@@ -8,8 +8,13 @@ module.exports = {
         'regal-blue': '#3A405A',
         'vermilion': '#CA3C25',
         'black-shadows': '#C2B2B4'
-      }
+      }, 
     },
+    maxWidth: {
+      '1/8': '13%',
+      '1/2': '50%',
+      '3/4': '75%',
+     }
   },
   variants: {
     extend: {
