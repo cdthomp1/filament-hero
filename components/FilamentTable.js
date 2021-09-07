@@ -19,13 +19,13 @@ export default function FilamentTable({ user }) {
 
 
 
-    //const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
+    const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
 
-    const filamentsData = []
+    //const filamentsData = []
 
     /* const filamentsData = undefined */
 
-    const filamentsError = false
+    //const filamentsError = false
 
     const [addFormData, setAddFormData] = useState({
         type: "",
@@ -135,7 +135,7 @@ export default function FilamentTable({ user }) {
 
 
     if (filamentsError) return <div>{filamentsError.message}</div>
-    if (!filamentsData) return (<table class="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
+    if (!filamentsData) return (<><table class="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
         <thead>
             <tr>
                 <th className="bg-gray-500 border text-xl">&nbsp;</th>
@@ -173,7 +173,7 @@ export default function FilamentTable({ user }) {
             </tr>
 
         </tbody>
-    </table>)
+    </table></>)
 
     return (
         <div className="flex flex-col items-center w-full">
