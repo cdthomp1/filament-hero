@@ -14,7 +14,10 @@ module.exports = {
       '1/8': '13%',
       '1/2': '50%',
       '3/4': '75%',
-     }
+     },
+     backgroundImage: theme => ({
+      'hero-image': "url('/hero-background.jpeg')",
+     })
   },
   variants: {
     extend: {
