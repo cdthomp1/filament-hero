@@ -148,7 +148,7 @@ export default function PrintsTable({ user }) {
 
     if (printsError || filamentsError) return <div>{printsError.message || filamentsError.message}</div>
     if (!printsData || !filamentsData) return (
-        <table class="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
+        <table className="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
             <thead>
                 <tr>
                     <th className="bg-gray-500 border text-xl">&nbsp;</th>
