@@ -104,6 +104,9 @@ export default function PrintsTable({ user }) {
         mutate(`/api/print/getPrints?userId=${user.sub}`);
         mutate(`/api/filament/getFilaments?userId=${user.sub}`);
 
+        for (var i = 0; i < event.target.elements.length; i++) {
+            event.target.elements[i].value = ''
+        }
     };
 
     const handleEditFormSubmit = async () => {
@@ -119,11 +122,14 @@ export default function PrintsTable({ user }) {
         event.preventDefault();
         SetEditPrintId(print._id);
 
+        console.log(filamentsData)
+        console.log(typeof(filamentsData))
+
         const formValues = {
             name: print.name,
             description: print.description,
             filamentId: addFormData.filament,
-            filamentName: filamentsData.where(filament => filament._id === addFormData.filament),
+            filamentName: filamentsData.find(filament => filament._id === addFormData.filament),
             duration: print.duration,
             weight: print.weight,
         };
@@ -230,7 +236,7 @@ export default function PrintsTable({ user }) {
                                             ></input>
                                         </td>
                                         <td className="text-center">
-                                            <input
+                                            <textarea
                                                 className="border"
                                                 type="text"
                                                 required="required"
@@ -238,7 +244,7 @@ export default function PrintsTable({ user }) {
                                                 name="description"
                                                 value={editPrintData.description}
                                                 onChange={handleEditFormChange}
-                                            ></input>
+                                            ></textarea>
                                         </td>
                                         <td className="text-center">
                                             <select
@@ -299,14 +305,13 @@ export default function PrintsTable({ user }) {
                             placeholder="Enter a print name..."
                             onChange={handleAddFormChange}
                         />
-                        <input
+                        <textarea
                             className="border"
                             type="text"
                             name="description"
                             required="required"
                             placeholder="Enter a description..."
-                            onChange={handleAddFormChange}
-                        />
+                            onChange={handleAddFormChange}></textarea>
                         <select
                             className="border"
                             required="required"
