@@ -1,29 +1,25 @@
-# Next.js + Tailwind CSS Example
+![Filament Hero Logo](https://res.cloudinary.com/cameron-projects/image/upload/v1633038317/Copy_of_Filament_Tracker_whrjf9.png)
+# Filament Hero
+## Your 3d Printing Companion
+---
+## Main Features 
+### Keep track of your filament usage
+By adding information on your filaments, you can easily see how much filament is left on the spool. When you add a new print, the length and weight will automatically be subracted from the filament data.
+### Keep track of your print settings 
+By adding print settings information, you can easily keep track of which settings are workin the best for you and which bring you heartache. 
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v2.2)](https://blog.tailwindcss.com/tailwindcss-2-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
-
-It uses the new [`Just-in-Time Mode`](https://tailwindcss.com/docs/just-in-time-mode) for Tailwind CSS.
-
-## Preview
-
-Preview the example live on [StackBlitz](http://stackblitz.com/):
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
-
-## Deploy your own
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-# or
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+## Installing
+To run a local version, complete the following: 
+- clone the repo to your machine
+- cd into the filament-hero directory: `cd filament hero`
+- run `npm i`
+- create a `.env.local` file to put your api keys 
+    - You will need the following api keys:
+    - MONGO_URI 
+    - AUTH0_SECRET
+    - AUTH0_BASE_URL
+    - AUTH0_ISSUER_BASE_URL
+    - AUTH0_CLIENT_ID
+    - AUTH0_CLIENT_SECRET
+    - If you need help setting up Auth0 with Next.js, this link is what I used to get started: [Auth0 Get Started](https://auth0.com/docs/quickstart/webapp/nextjs/01-login)
+- Afer everything is installed and keys are setup, rund `npn run dev` to start the application
