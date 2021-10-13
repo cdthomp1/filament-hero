@@ -16,7 +16,7 @@ function classNames(...classes) {
 
 export default function Navigation() {
     const { user, error, isLoading } = useUser();
-    return (
+     return (
         <Disclosure as="nav" className="bg-regal-blue">
             {({ open }) => (
                 <>
