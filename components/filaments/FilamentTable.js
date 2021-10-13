@@ -17,18 +17,7 @@ const fetcher = async (...args) => {
 }
 
 export default function FilamentTable({ user }) {
-
-    console.log(user)
-
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
-
-    const [addFormData, setAddFormData] = useState({
-        type: "",
-        color: "",
-        weight: 0,
-        diameter: 0,
-        weight: 0
-    });
 
     const [editFilamentData, setEditFormData] = useState({
         type: "",
@@ -45,18 +34,6 @@ export default function FilamentTable({ user }) {
 
     }
 
-    const handleAddFormChange = (event) => {
-        event.preventDefault();
-
-        const fieldName = event.target.getAttribute("name");
-        const fieldValue = event.target.value;
-
-        const newFormData = { ...addFormData };
-        newFormData[fieldName] = fieldValue;
-
-        setAddFormData(newFormData);
-    };
-
     const handleEditFormChange = (event) => {
         event.preventDefault();
         const fieldName = event.target.getAttribute("name");
@@ -67,31 +44,6 @@ export default function FilamentTable({ user }) {
         setEditFormData(newFormData);
     };
 
-    const handleAddFormSubmit = async (event) => {
-        event.preventDefault();
-        let newFilament
-        if (user) {
-            newFilament = {
-                type: addFormData.type,
-                color: addFormData.color,
-                weight: addFormData.weight,
-                diameter: addFormData.diameter,
-                length: addFormData.length,
-                userId: user.sub
-            };
-        }
-
-
-        //console.log(newFilament)
-
-        await fetcher("/api/filament/addFilament", {
-            method: "post",
-            body: JSON.stringify(newFilament)
-        });
-
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-
-    };
 
     const handleEditFormSubmit = async () => {
         await fetcher("/api/filament/updateFilament?id=" + editFilamentId, {
@@ -127,9 +79,7 @@ export default function FilamentTable({ user }) {
             body: JSON.stringify({ id: filamentId })
         });
 
-
         mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-
     };
 
 
@@ -177,23 +127,23 @@ export default function FilamentTable({ user }) {
     </table></>)
 
     return (
-        <div className="flex flex-col width-5/12">
+        <div className="flex flex-col w-7/12">
             {filamentsData.length > 0 ?
                 <>
                     <div className='grid grid-cols-5 gap-x-1 '>
-                        <div className="text-blue-700 lg:text-2xl">Type</div>
-                        <div className="text-blue-700 lg:text-2xl">Color</div>
-                        <div className="text-blue-700 lg:text-2xl">Weight</div>
-                        <div className=" text-blue-700 lg:text-2xl">Diameter</div>
+                        <div className="text-blue-700 dark:text-blue-400 lg:text-2xl">Type</div>
+                        <div className="text-blue-700 dark:text-blue-400 lg:text-2xl">Color</div>
+                        <div className="text-blue-700 dark:text-blue-400 lg:text-2xl">Weight</div>
+                        <div className=" text-blue-700 dark:text-blue-400 lg:text-2xl">Diameter</div>
                     </div>
                     {filamentsData.map((filament, index) => {
                         return (
                             <Fragment key={index}> {editFilamentId !== filament._id ? (
-                                <div className='grid grid-cols-5 gap-x-10 w-full'>
-                                    <div id="index" className="">{filament.type}</div>
-                                    <div id="index" className="">{filament.color}</div>
-                                    <div id="index" className="">{filament.weight}</div>
-                                    <div id="index" className="">{filament.diameter}</div>
+                                <div className='grid grid-cols-5 gap-x-1 w-full border border-b-1'>
+                                    <div id="index" className="p-1">{filament.type}</div>
+                                    <div id="index" className="p-1">{filament.color}</div>
+                                    <div id="index" className="p-1">{filament.weight}</div>
+                                    <div id="index" className="p-1">{filament.diameter}</div>
                                     <div id="index"><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, filament)}
                                         icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(filament._id)} icon={faDumpster} /></div>
                                 </div>) : (
@@ -261,7 +211,7 @@ export default function FilamentTable({ user }) {
 
                     })
                     }
-                    <FilamentForm user={user} onFormAdd={handleFormUpdate} />
+                    <div className="mt-4"><FilamentForm user={user} onFormAdd={handleFormUpdate} /></div>
                 </>
                 :
                 <div className="flex flex-col justify-content-center">

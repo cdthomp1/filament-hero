@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -168,7 +168,7 @@ export default function FilamentForm({ user, onFormAdd }) {
                     onChange={handleAddFormChange}
                 />
 
-                <button className="bg-gray-200 rounded p-1 hover:bg-green-400 col-span-4" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer w-12" icon={faPlus} /> Filament</button>
+                <button className="bg-gray-200 dark:bg-green-400 dark:hover:bg-gray-200 dark:text-gray-800 rounded p-1 hover:bg-green-400 col-span-4" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer w-12" icon={faPlus} /> Filament</button>
             </form>
         </>
     )

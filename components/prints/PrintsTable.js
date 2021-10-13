@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
+import PrintForm from './PrintForm'
 
 
 const fetcher = async (...args) => {
@@ -17,6 +18,7 @@ const fetcher = async (...args) => {
 export default function PrintsTable({ user }) {
     const { data: printsData, error: printsError } = useSWR(`/api/print/getPrints?userId=${user.sub}`, fetcher)
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
+
 
     const [addFormData, setAddFormData] = useState({
         name: "",
@@ -115,15 +117,23 @@ export default function PrintsTable({ user }) {
         SetEditPrintId(null);
     };
 
+    const handleFormUpdate = (event) => {
+        console.log(event)
+        mutate(`/api/print/getPrints?userId=${user.sub}`);
+
+    }
+
     const handleEditClick = (event, print) => {
         event.preventDefault();
         SetEditPrintId(print._id);
+
+        console.log(print)
 
         const formValues = {
             name: print.name,
             description: print.description,
             filamentId: addFormData.filament,
-            filamentName: filamentsData.where(filament => filament._id === addFormData.filament),
+            filamentName: filamentsData.find(filament => filament._id === addFormData.filament),
             duration: print.duration,
             weight: print.weight,
         };
@@ -191,204 +201,104 @@ export default function PrintsTable({ user }) {
 
 
     return (
-        <div className="flex flex-col items-center w-full">
+        <div className="flex flex-col w-7/12">
             {printsData.length > 0 ?
-                <><table className="shadow-lg border-collapse border w-9/12 table-fixed mb-4">
-                    <thead>
-                        <tr>
-                            <th className="bg-blue-100 border text-xl">Name</th>
-                            <th className="bg-blue-100 border text-xl">Description</th>
-                            <th className="bg-blue-100 border text-xl">Filament</th>
-                            <th className="bg-blue-100 border text-xl">Duration</th>
-                            <th className="bg-blue-100 border text-xl ">Weight</th>
-                            <th className="bg-blue-100 border text-xl "></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {printsData.map((print, index) => {
-                            return (
-                                <Fragment key={index}> {editPrintId !== print._id ? (
-                                    <tr className='even:bg-gray-100'>
-                                        <td className="text-center">{print.name}</td>
-                                        <td className="text-center">{print.description}</td>
-                                        <td className="text-center">{print.filamentName}</td>
-                                        <td className="text-center">{print.duration}</td>
-                                        <td className="text-center">{print.weight}</td>
-                                        <td className="text-center "><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, print)}
-                                            icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(print._id)} icon={faDumpster} /></td>
-                                    </tr>) :
-                                    (<tr key={index}>
-                                        <td className="text-center">
-                                            <input
-                                                className="border"
-                                                type="text"
-                                                required="required"
-                                                placeholder="Enter a name..."
-                                                name="name"
-                                                value={editPrintData.name}
-                                                onChange={handleEditFormChange}
-                                            ></input>
-                                        </td>
-                                        <td className="text-center">
-                                            <input
-                                                className="border"
-                                                type="text"
-                                                required="required"
-                                                placeholder="Enter a description..."
-                                                name="description"
-                                                value={editPrintData.description}
-                                                onChange={handleEditFormChange}
-                                            ></input>
-                                        </td>
-                                        <td className="text-center">
-                                            <select
-                                                className="border"
-                                                required="required"
-                                                name="filament"
-                                                value={filamentsData[0]._id}
-                                                onChange={handleEditFormChange}
-                                            >
-                                                {filamentsData.map((filament, index) => {
-                                                    //console.log("HELLO")
-                                                    return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
-                                                })}
-                                            </select>
-                                        </td>
-                                        <td className="text-center">
-                                            <input
-                                                className="border"
-                                                type="number"
-                                                required="required"
-                                                placeholder="Enter a duration..."
-                                                name="duration"
-                                                value={editPrintData.duration}
-                                                onChange={handleEditFormChange}
-                                            ></input>
-                                        </td>
-                                        <td className="text-center">
-                                            <input
-                                                className="border"
-                                                type="number"
-                                                required="required"
-                                                placeholder="Enter a weight..."
-                                                name="weight"
-                                                value={editPrintData.weight}
-                                                onChange={handleEditFormChange}
-                                            ></input>
-                                        </td>
-                                        <td className="text-center">
-                                            <button
-                                                onClick={handleEditFormSubmit}
-                                            ><FontAwesomeIcon className="m-1 cursor-pointer" icon={faSave} /></button>
-                                            <button type="button" onClick={handleCancelClick}>
-                                                <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
-                                            </button>
-                                        </td>
-                                    </tr>)}
+                <>
 
-                                </Fragment>)
-                        })}
-                    </tbody>
-                </table>
-                    <form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
-                        <input
-                            className="border"
-                            type="text"
-                            name="name"
-                            required="required"
-                            placeholder="Enter a print name..."
-                            onChange={handleAddFormChange}
-                        />
-                        <input
-                            className="border"
-                            type="text"
-                            name="description"
-                            required="required"
-                            placeholder="Enter a description..."
-                            onChange={handleAddFormChange}
-                        />
-                        <select
-                            className="border"
-                            required="required"
-                            name="filament"
-                            placeholder="Filament"
-                            onChange={handleAddFormChange}
-                        >
-                            <option value="" selected disabled hidden>Filament</option>
-                            {filamentsData.map((filament, index) => {
-                                return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
-                            })}
-                        </select>
-                        <input
-                            className="border"
-                            type="number"
-                            required="required"
-                            placeholder="Enter a duration..."
-                            name="duration"
+                    <div className="grid grid-cols-6 gap-x-1">
+                        <div className="text-blue-700 lg:text-2xl">Name</div>
+                        <div className="text-blue-700 lg:text-2xl">Description</div>
+                        <div className="text-blue-700 lg:text-2xl">Filament</div>
+                        <div className="text-blue-700 lg:text-2xl">Duration</div>
+                        <div className="text-blue-700 lg:text-2xl ">Weight</div>
+                    </div>
+                    {printsData.map((print, index) => {
+                        return (
+                            <Fragment key={index}> {editPrintId !== print._id ? (
+                                <div className='grid grid-cols-6 gap-x-1 w-full border border-b-1'>
+                                    <div className="p-1">{print.name}</div>
+                                    <div className="p-1">{print.description}</div>
+                                    <div className="p-1">{print.filamentName}</div>
+                                    <div className="p-1">{print.duration}</div>
+                                    <div className="p-1">{print.weight}</div>
+                                    <div className="p-1"><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, print)}
+                                        icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(print._id)} icon={faDumpster} /></div>
+                                </div>) :
+                                (<div key={index} className="grid grid-cols-6 gap-x-1">
+                                    <div className="text-center">
+                                        <input
+                                            className="border"
+                                            type="text"
+                                            required="required"
+                                            placeholder="Name"
+                                            name="name"
+                                            value={editPrintData.name}
+                                            onChange={handleEditFormChange}
+                                        ></input>
+                                    </div>
+                                    <div className="text-center">
+                                        <input
+                                            className="border"
+                                            type="text"
+                                            required="required"
+                                            placeholder="Description"
+                                            name="description"
+                                            value={editPrintData.description}
+                                            onChange={handleEditFormChange}
+                                        ></input>
+                                    </div>
+                                    <div className="text-center">
+                                        <select
+                                            className="border"
+                                            required="required"
+                                            name="filament"
+                                            value={filamentsData[0]._id}
+                                            onChange={handleEditFormChange}
+                                        >
+                                            {filamentsData.map((filament, index) => {
+                                                //console.log("HELLO")
+                                                return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="text-center">
+                                        <input
+                                            className="border"
+                                            type="number"
+                                            required="required"
+                                            placeholder="Duration"
+                                            name="duration"
+                                            value={editPrintData.duration}
+                                            onChange={handleEditFormChange}
+                                        ></input>
+                                    </div>
+                                    <div className="text-center">
+                                        <input
+                                            className="border"
+                                            type="number"
+                                            required="required"
+                                            placeholder="Weight"
+                                            name="weight"
+                                            value={editPrintData.weight}
+                                            onChange={handleEditFormChange}
+                                        ></input>
+                                    </div>
+                                    <div className="text-center">
+                                        <button
+                                            onClick={handleEditFormSubmit}
+                                        ><FontAwesomeIcon className="m-1 cursor-pointer" icon={faSave} /></button>
+                                        <button type="button" onClick={handleCancelClick}>
+                                            <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
+                                        </button>
+                                    </div>
+                                </div>)}
 
-                            onChange={handleAddFormChange}
-                        />
-                        <input
-                            className="border"
-                            type="number"
-                            step="0.01"
-                            name="weight"
-                            required="required"
-                            placeholder="Enter a weight..."
-                            onChange={handleAddFormChange}
-                        />
-                        <button className="bg-gray-200 rounded p-1 hover:bg-green-400" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
-                    </form></>
+                            </Fragment>)
+                    })}
+                    <div className="mt-4"><PrintForm  user={user} onFormAdd={handleFormUpdate} filamentsData={filamentsData} /></div>
+                </>
                 :
-                <><p className="m-4">Add a Print!</p><form className="flex flex-row w-9/12 justify-evenly" onSubmit={handleAddFormSubmit}>
-                    <input
-                        className="border"
-                        type="text"
-                        name="name"
-                        required="required"
-                        placeholder="Enter a print name..."
-                        onChange={handleAddFormChange}
-                    />
-                    <input
-                        className="border"
-                        type="text"
-                        name="description"
-                        required="required"
-                        placeholder="Enter a description..."
-                        onChange={handleAddFormChange}
-                    />
-                    <select
-                        className="border w-40"
-                        required="required"
-                        name="filament"
-                        placeholder="Filament"
-                        onChange={handleAddFormChange}
-                    >
-                        <option value="" selected disabled hidden>Filament</option>
-                        {filamentsData.map((filament, index) => {
-                            return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
-                        })}
-                    </select>
-                    <input
-                        className="border"
-                        type="number"
-                        required="required"
-                        placeholder="Enter a duration..."
-                        name="duration"
-
-                        onChange={handleAddFormChange}
-                    />
-                    <input
-                        className="border"
-                        type="number"
-                        step="0.01"
-                        name="weight"
-                        required="required"
-                        placeholder="Enter a weight..."
-                        onChange={handleAddFormChange}
-                    />
-                    <button className="bg-gray-200 rounded p-1 hover:bg-green-400 w-20" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
-                </form></>}
+                <><p className="m-4">Add a Print!</p><PrintForm user={user} onFormAdd={handleFormUpdate} filamentsData={filamentsData} /></>}
 
         </div>
     )
