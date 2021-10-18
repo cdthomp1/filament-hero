@@ -23,6 +23,42 @@ const filamentSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    printingNozelTemp: {
+        type: Number,
+        default: 0
+    },
+    printingBedTemp: {
+        type: Number,
+        default: 0
+    },
+    maxOverHangDistance: {
+        type: Number,
+        default: 0
+    },
+    maxOverHangAngle: {
+        type: Number,
+        default: 0
+    },
+    purchaseDate: {
+        type: Date,
+        default: 0
+    },
+    purchasePrice: {
+        type: Number,
+        default: 0
+    },
+    purchaseLocation: {
+        type: String,
+        default: 0
+    },
+    generalNotes: {
+        type: String,
+        default: 0
+    },
+    picture: {
+        type: String,
+        default: 0
+    },
     userId: {
         type: String
     }

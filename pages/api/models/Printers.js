@@ -2,51 +2,45 @@ import mongoose from 'mongoose';
 mongoose.Promise = global.Promise;
 
 
-const printSchema = mongoose.Schema({
+const printerSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: true
     },
-    printer: {
+    make: {
         type: String,
         required: true
     },
-    stlUrl: {
-        type: String,
-    },
-    estPrintTime: {
-        type: Number,
-    },
-    actPrintTime: {
-        type: String,
-    },
-    filamentId: {
+    model: {
         type: String,
         required: true
+    },
+    bedWidth: {
+        type: String,
+    },
+    bedLength: {
+        type: String,
+    },
+    buildHeight: {
+        type: String,
     },
     notes: {
+        type: String,
+    },
+    currentFilamentId: {
         type: String,
     },
     status: {
         type: String,
     },
-    partId: {
+    picture: {
         type: String,
     },
-    settingsId: {
+    currentPrint: {
         type: String,
     },
-    nozelSize: {
-        type: Number,
-    },
-    filamentLength: {
-        type: Number,
-    },
-    weight: {
+    lastPrint: {
         type: String,
-    },
-    date: {
-        type: Date,
     },
     userId: {
         type: String
@@ -57,4 +51,4 @@ const printSchema = mongoose.Schema({
     })
 
 // Do I have a model already? Make a new one if I don't
-module.exports = mongoose.models.print || mongoose.model('print', printSchema);
+module.exports = mongoose.models.printer || mongoose.model('printer', printerSchema);
