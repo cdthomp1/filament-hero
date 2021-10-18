@@ -7,25 +7,46 @@ const printSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
+    printer: {
         type: String,
         required: true
+    },
+    stlUrl: {
+        type: String,
+    },
+    estPrintTime: {
+        type: Number,
+    },
+    actPrintTime: {
+        type: String,
     },
     filamentId: {
         type: String,
         required: true
     },
-    filamentName: {
+    notes: {
         type: String,
-        required: true
     },
-    duration: {
+    status: {
+        type: String,
+    },
+    partId: {
+        type: String,
+    },
+    settingsId: {
+        type: String,
+    },
+    nozelSize: {
         type: Number,
-        default: 0
+    },
+    filamentLength: {
+        type: Number,
     },
     weight: {
-        type: Number,
-        default: 0
+        type: String,
+    },
+    date: {
+        type: Date,
     },
     userId: {
         type: String
