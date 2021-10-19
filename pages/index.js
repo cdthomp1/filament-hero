@@ -11,8 +11,8 @@ export default function Home() {
         <meta property="og:image" content="https://filamenthero.com/filament-hero-image.png" />
         <meta property="og:url" content="https://filamenthero.com" />
 
-        <meta name="twitter:card" content="The easy way to keep track of how much filament you have left!" />
-        <meta property="twitter:image" content="https://filamenthero.com/filament-hero-image.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta property="twitter:image" content="https://res.cloudinary.com/cameron-projects/image/upload/v1633038317/Copy_of_Filament_Tracker_whrjf9.png" />
         <meta property="twitter:url" content="https://filamenthero.com" />
         <meta property="twitter:title" content="Filament Hero" />
         <meta name="twitter:site" content="@FilamentHero" />
