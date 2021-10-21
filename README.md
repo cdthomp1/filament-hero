@@ -1,6 +1,7 @@
 ![Filament Hero Logo](https://res.cloudinary.com/cameron-projects/image/upload/v1633038317/Copy_of_Filament_Tracker_whrjf9.png)
 # Filament Hero
 ## Your 3d Printing Companion
+[Follow development on Discord!](https://discord.gg/sgTafRYxfQ)
 ---
 ## Main Features 
 ### Keep track of your filament usage
