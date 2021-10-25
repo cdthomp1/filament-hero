@@ -17,33 +17,43 @@ const printerSchema = mongoose.Schema({
     },
     bedWidth: {
         type: String,
+        default: ''
     },
     bedLength: {
         type: String,
+        default: ''
     },
     buildHeight: {
         type: String,
+        default: ''
     },
     notes: {
         type: String,
+        default: ''
     },
     currentFilamentId: {
         type: String,
+        default: ''
     },
     status: {
         type: String,
+        default: ''
     },
     picture: {
         type: String,
+        default: ''
     },
     currentPrint: {
         type: String,
+        default: ''
     },
     lastPrint: {
         type: String,
+        default: ''
     },
     userId: {
-        type: String
+        type: String,
+        default: ''
     }
 },
     {
