@@ -7,7 +7,8 @@ module.exports = {
       colors: {
         'regal-blue': '#3A405A',
         'vermilion': '#CA3C25',
-        'black-shadows': '#C2B2B4'
+        'black-shadows': '#C2B2B4',
+        'nav-gray': "#495057"
       },
       height: {
         "10v": "10vh",
