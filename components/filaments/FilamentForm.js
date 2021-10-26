@@ -75,7 +75,7 @@ export default function FilamentForm({ user, onFormAdd }) {
 
         //console.log(newFilament)
 
-        await fetcher("/api/filament/addFilament", {
+        await fetcher("/api/filament/createFilament", {
             method: "post",
             body: JSON.stringify(newFilament)
         });
