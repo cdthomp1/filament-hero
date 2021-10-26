@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.5.0",
@@ -12,12 +13,13 @@
     "@fortawesome/react-fontawesome": "^0.1.15",
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.4",
-    "mongodb": "^3.6.11",
     "jest": "^27.3.1",
+    "mongodb": "^3.6.11",
     "mongoose": "^5.13.7",
     "next": "latest",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-tailwind-table": "^1.1.1",
     "swr": "^0.5.6"
   },
   "devDependencies": {
