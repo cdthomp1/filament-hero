@@ -31,8 +31,9 @@ const printerSchema = mongoose.Schema({
         type: String,
         default: ''
     },
-    currentFilamentId: {
-        type: String,
+    currentFilament: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'filament',
         default: ''
     },
     status: {

@@ -18,27 +18,12 @@ const connectDB = async () => {
 
 export default async (req, res) => {
     try {
-        const uri = process.env.MONGO_URI;
-        const client = new MongoClient(uri);
-        await client.connect();
-        const database = client.db('filamenttracker')
-        const test = database.collection("printers")
+        await connectDB();
+        console.log(req.body)
+        const newPrinter = new Printer(JSON.parse(req.body))
 
-        const doc = {
-            name: "Astra",
-            make: "Creality",
-            model: "Ender 3 Pro",
-            favColor: "red"
-        }
+        const createdPrinter = await newPrinter.save()
 
-        const result = await test.insertOne(doc);
-
-        /* var printer = req.body
-        const newPrinter = new Printer(printer)
-
-        const createdPrinter = await newPrinter.save() */
-
-        var createdPrinter = result.ops.find(op => op._id === result.insertedId)
 
         res.status(200).json(createdPrinter)
 
