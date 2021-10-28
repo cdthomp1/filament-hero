@@ -80,7 +80,7 @@ const PrinterTable = ({ user }) => {
             body: JSON.stringify(editPrinterData)
         });
         mutate(`/api/printer/getPrinters?userId=${user.sub}`);
-        setEditFilamentId(null);
+        setEditPrinterId(null);
     };
 
     const handleDeleteClick = async (printerId) => {
@@ -246,32 +246,32 @@ const PrinterTable = ({ user }) => {
                                         <input type="text" name="name" className="border w-28" value={editPrinterData.name} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" />
+                                        <input type="text" className="border w-28" value={editPrinterData.make} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" />
+                                        <input type="text" className="border w-28" value={editPrinterData.model} onChange={handleEditFormChange} /> 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" />
+                                        <input type="text" className="border w-28" value={editPrinterData.bedWidth} onChange={handleEditFormChange} /> 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" />
+                                        <input type="text" className="border w-28" value={editPrinterData.bedLength} onChange={handleEditFormChange} /> 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" />
+                                        <input type="text" className="border w-28" value={editPrinterData.buildHeight} onChange={handleEditFormChange} /> 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" />
+                                        <input type="text" className="border w-28" value={editPrinterData.currentFilament} onChange={handleEditFormChange} /> 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" />
+                                        <input type="text" className="border w-28" value={editPrinterData.status} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input name="currentPrint" disabled="true" type="text" className="border w-28 cursor-not-allowed" title="You can add a print in the prints tab!" />
+                                        <input name="currentPrint" disabled="true" type="text" className="border w-28 cursor-not-allowed" title="You can add a print in the prints tab!" onChange={handleEditFormChange} />
 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input name="notes" type="text" className="border w-28" />
+                                        <input name="notes" type="text" className="border w-28" value={editPrinterData.notes} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
                                         <button

@@ -21,15 +21,24 @@ export default async (req, res) => {
 
         await connectDB();
         const { id } = req.query
-        const { name } = JSON.parse(req.body)
+        const { name, make, model, bedWidth, bedLength, buildHeight, description, currentFilament, status, notes } = JSON.parse(req.body)
         console.log(name)
         const printer = await Printer.findById(id)
         console.log(printer)
 
         if (printer) {
 
-            // printer.name = name
-
+            printer.name = name,
+            printer.make = make,
+            printer.model = model,
+            printer.bedWidth = bedWidth,
+            printer.bedLength = bedLength,
+            printer.buildHeight = buildHeight,
+            printer.description = description,
+            printer.currentFilament = `${currentFilament}`
+            printer.status = status,
+            // image = image,
+            printer.notes = notes
 
             const updatedPrinter = await printer.save()
             console.log(updatedPrinter)
@@ -39,6 +48,7 @@ export default async (req, res) => {
         }
     }
     catch (error) {
+        console.log(error)
         res.status(500).json({ message: error })
 
     }
