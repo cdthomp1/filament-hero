@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import useSWR, { mutate } from 'swr'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,12 +19,69 @@ const fetcher = async (...args) => {
 const PrinterTable = ({ user }) => {
     var { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
 
-    const [editPrinterId, SetEditPrinterId] = useState(null);
+    const [editPrinterId, setEditPrinterId] = useState(null);
+
+    const [editPrinterData, setEditFormData] = useState({
+        name: "",
+        make: "",
+        model: "",
+        bedWidth: 0,
+        bedLength: 0,
+        buildHeight: 0,
+        currentFilament: "",
+        status: "",
+        // image: "",
+        notes: "",
+        userId: ""
+    });
 
 
     // this is to see the skeleton table 
     //printersData=false
 
+
+    const handleEditClick = (event, printer) => {
+        event.preventDefault();
+        setEditPrinterId(printer._id);
+
+        const formValues = {
+            name: printer.name,
+            make: printer.make,
+            model: printer.model,
+            bedWidth: printer.bedWidth,
+            bedLength: printer.bedLength,
+            buildHeight: printer.buildHeight,
+            description: printer.description,
+            currentFilament: printer.currentFilament._id,
+            status: printer.status,
+            // image: printer.image,
+            notes: printer.notes,
+            userId: user.sub
+        };
+
+        setEditFormData(formValues);
+    };
+
+    const handleEditFormChange = (event) => {
+        event.preventDefault();
+        const fieldName = event.target.getAttribute("name");
+        const fieldValue = event.target.value;
+        const newFormData = { ...editPrinterData };
+        newFormData[fieldName] = fieldValue;
+
+        console.log(newFormData)
+
+        setEditFormData(newFormData);
+    };
+
+    const handleEditFormSubmit = async () => {
+        await fetcher("/api/printer/editPrinter?id=" + editPrinterId, {
+            method: "put",
+            body: JSON.stringify(editPrinterData)
+        });
+        mutate(`/api/printer/getPrinters?userId=${user.sub}`);
+        setEditFilamentId(null);
+    };
 
     const handleDeleteClick = async (printerId) => {
         const res = await fetcher("/api/printer/deletePrinter", {
@@ -34,6 +91,10 @@ const PrinterTable = ({ user }) => {
 
         mutate(`/api/printer/getPrinters?userId=${user.sub}`);
 
+    };
+
+    const handleCancelClick = () => {
+        setEditPrinterId(null);
     };
 
     if (printersError) return <div>{printersError.message}</div>
@@ -120,8 +181,8 @@ const PrinterTable = ({ user }) => {
                     </thead>
                     <tbody className="text-gray-600 text-sm font-light">
                         {printersData.map((printer, index) => {
-                            return (
-                                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                            return (<Fragment key={index}> {editPrinterId !== printer._id ? (
+                                <tr className="border-b border-gray-200 hover:bg-gray-100">
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
                                         <div className="flex items-center justify-center">
                                             {printer.name}
@@ -163,11 +224,6 @@ const PrinterTable = ({ user }) => {
                                     <td className="py-3 px-6 text-center">
                                         <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">{printer.status}</span>
                                     </td>
-                                    {/* <td className="py-3 px-6 text-center">
-                                <div className="flex item-center justify-center">
-                                    <img className="w-14 h-14  border-gray-200 border transform hover:scale-125" src="https://res.cloudinary.com/cameron-projects/image/upload/v1635223812/IMG_6911_xekcs5.png" />
-                                </div>
-                            </td> */}
                                     <td className="py-3 px-6 text-center">
                                         <div className="flex item-center justify-center">
                                             <a href="#" className="text-purple-600">{printer.currentPrint}</a>
@@ -184,7 +240,49 @@ const PrinterTable = ({ user }) => {
                                                 icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(printer._id)} icon={faDumpster} />
                                         </div>
                                     </td>
-                                </tr>
+                                </tr>) : (
+                                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                                    <td class="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" name="name" className="border w-28" value={editPrinterData.name} onChange={handleEditFormChange} />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input name="currentPrint" disabled="true" type="text" className="border w-28 cursor-not-allowed" title="You can add a print in the prints tab!" />
+
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <input name="notes" type="text" className="border w-28" />
+                                    </td>
+                                    <td className="py-3 px-6 text-center whitespace-nowrap">
+                                        <button
+                                            onClick={handleEditFormSubmit}
+                                        ><FontAwesomeIcon className="m-1 cursor-pointer" icon={faSave} /></button>
+                                        <button type="button" onClick={handleCancelClick}>
+                                            <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
+                                        </button>
+                                    </td>
+                                </tr>)}
+                            </Fragment>
                             )
                         })}
 
