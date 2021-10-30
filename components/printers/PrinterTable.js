@@ -16,7 +16,7 @@ const fetcher = async (...args) => {
     return data
 }
 
-const PrinterTable = ({ user }) => {
+const PrinterTable = ({ user, filamentsData }) => {
     var { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
 
     const [editPrinterId, setEditPrinterId] = useState(null);
@@ -222,7 +222,8 @@ const PrinterTable = ({ user }) => {
                                         </div>
                                     </td>
                                     <td className="py-3 px-6 text-center">
-                                        <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">{printer.status}</span>
+                                        {printer.status === 'Printing' ? (<span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">{printer.status}</span>) : printer.status === 'Active' ? (<span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{printer.status}</span>) : printer.status === 'Down' ? (<span className="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">{printer.status}</span>) : (<span className="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">{printer.status}</span>)}
+
                                     </td>
                                     <td className="py-3 px-6 text-center">
                                         <div className="flex item-center justify-center">
@@ -241,37 +242,48 @@ const PrinterTable = ({ user }) => {
                                         </div>
                                     </td>
                                 </tr>) : (
-                                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                                <Fragment key={index}><tr className="border-b border-gray-200 hover:bg-gray-100">
                                     <td class="py-3 px-6 text-center whitespace-nowrap">
                                         <input type="text" name="name" className="border w-28" value={editPrinterData.name} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" value={editPrinterData.make} onChange={handleEditFormChange} />
+                                        <input type="text" name="make" className="border w-28" value={editPrinterData.make} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" value={editPrinterData.model} onChange={handleEditFormChange} /> 
+                                        <input type="text" name="model" className="border w-28" value={editPrinterData.model} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" value={editPrinterData.bedWidth} onChange={handleEditFormChange} /> 
+                                        <input type="text" name="bedWidth" className="border w-28" value={editPrinterData.bedWidth} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" value={editPrinterData.bedLength} onChange={handleEditFormChange} /> 
+                                        <input type="text" name="bedLength" className="border w-28" value={editPrinterData.bedLength} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" value={editPrinterData.buildHeight} onChange={handleEditFormChange} /> 
+                                        <input type="text" name="buildHeight" className="border w-28" value={editPrinterData.buildHeight} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" value={editPrinterData.currentFilament} onChange={handleEditFormChange} /> 
+                                        <select type="text" name="currentFilament" className="border" onChange={handleEditFormChange} >
+                                            <option value="">Filament</option>
+                                            {filamentsData.map((filament, index) => {
+                                                return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                                            })}
+                                        </select>
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input type="text" className="border w-28" value={editPrinterData.status} onChange={handleEditFormChange} />
+                                        <select type="text" name="status" className="border" value={editPrinterData.status} onChange={handleEditFormChange}>
+                                            <option value="">Status</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Printing">Printing</option>
+                                            <option value="Maintenance">Maintenance</option>
+                                            <option value="Down">Down</option>
+                                        </select>
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
                                         <input name="currentPrint" disabled="true" type="text" className="border w-28 cursor-not-allowed" title="You can add a print in the prints tab!" onChange={handleEditFormChange} />
 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input name="notes" type="text" className="border w-28" value={editPrinterData.notes} onChange={handleEditFormChange} />
+                                        <input name="notes" name="notes" type="text" className="border w-28" value={editPrinterData.notes} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
                                         <button
@@ -281,7 +293,7 @@ const PrinterTable = ({ user }) => {
                                             <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
                                         </button>
                                     </td>
-                                </tr>)}
+                                </tr> </Fragment>)}
                             </Fragment>
                             )
                         })}

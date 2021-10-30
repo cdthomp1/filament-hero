@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { mutate } from 'swr'
 
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { ToastContainer, toast } from 'react-toastify';
@@ -18,12 +19,15 @@ const fetcher = async (...args) => {
     return res
 }
 
-const notifySuccess = (message) => toast.success(message, {
-    position: "bottom-right",
-    autoClose: 3000,
-    hideProgressBar: true,
-    draggable: true,
-});
+const notifySuccess = (message) => {
+    toast.success(message, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        draggable: true,
+    });
+
+};
 
 const notifyError = (message) => toast.error(message, {
     position: "bottom-right",
@@ -94,7 +98,7 @@ const PrinterForm = ({ user, filamentsData }) => {
         // const data = await res.json()
 
         if (res.status === 200) {
-            notifySuccess('Filament Created! 🎉')
+            notifySuccess('Filament Created! 🎉');
         }
 
     };
@@ -108,7 +112,8 @@ const PrinterForm = ({ user, filamentsData }) => {
     </svg></>)
 
     return (
-        <div className="border-b border-gray-200 flex justify-center">
+        <div className="border-b border-gray-200 flex flex-col justify-center">
+            
             <ToastContainer
                 position="bottom-right"
                 autoClose={3000}
