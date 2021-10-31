@@ -162,7 +162,7 @@ const PrinterTable = ({ user, filamentsData }) => {
     return (
         <div>
             <div className="overflow-x-auto">
-                <table className="min-w-max w-full table-auto ">
+                <table className="table-auto ">
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                             <th className="py-3 px-6 text-center">Name</th>
@@ -188,14 +188,14 @@ const PrinterTable = ({ user, filamentsData }) => {
                                             {printer.name}
                                         </div>
                                     </td>
-                                    <td className="py-3 px-6 text-center">
+                                    <td className="py-3 px-6 text-center max-w-min">
                                         <div className="flex items-center justify-center">
                                             <div className="mr-2">
                                                 {printer.make}
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-6 text-center">
+                                    <td className="py-3 px-6 text-center max-w-min">
                                         <div className="flex items-center justify-center">
                                             {printer.model}
                                         </div>
