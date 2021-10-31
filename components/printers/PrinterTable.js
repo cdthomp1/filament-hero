@@ -160,8 +160,8 @@ const PrinterTable = ({ user, filamentsData }) => {
         </table>
     )
     return (
-        <div>
-            <div className="overflow-x-auto">
+        <>
+            <div className="w-11/12 m-auto overflow-x-auto">
                 <table className="table-auto ">
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -302,7 +302,7 @@ const PrinterTable = ({ user, filamentsData }) => {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </>
     )
 }
 
