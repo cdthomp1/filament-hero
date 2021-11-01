@@ -62,6 +62,8 @@ const PrintForm = ({ user, onFormAdd, filamentsData }) => {
                 filamentName: `${filament.type} ${filament.color} `,
                 duration: addFormData.duration,
                 weight: addFormData.weight,
+                printer: '6177815ca242ae0a678a23ed',
+
                 userId: user.sub
             };
         }
@@ -81,7 +83,7 @@ const PrintForm = ({ user, onFormAdd, filamentsData }) => {
             body: JSON.stringify(newPrint)
         });
 
-        await fetcher("/api/filament/updateFilament?id=" + printFilament._id, {
+        await fetcher("/api/filament/editFilament?id=" + printFilament._id, {
             method: "put",
             body: JSON.stringify(updatedFilament)
         });
