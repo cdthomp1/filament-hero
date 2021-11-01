@@ -3,7 +3,10 @@ import useSWR, { mutate } from 'swr'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
-import PrinterForm from './PrinterForm'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 
 const fetcher = async (...args) => {
@@ -15,6 +18,34 @@ const fetcher = async (...args) => {
     }
     return data
 }
+
+const dirtyFetcher = async (...args) => {
+    const res = await fetch(...args)
+    const data = await res.json()
+
+    if (res.status !== 200) {
+        throw new Error(data.message)
+    }
+    return res
+}
+
+const notifySuccess = (message) => {
+    console.log('hello')
+    toast.success(message, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        draggable: true,
+    });
+
+};
+
+const notifyError = (message) => toast.error(message, {
+    position: "bottom-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    draggable: true,
+});
 
 const PrinterTable = ({ user, filamentsData }) => {
     var { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
@@ -69,25 +100,35 @@ const PrinterTable = ({ user, filamentsData }) => {
         const newFormData = { ...editPrinterData };
         newFormData[fieldName] = fieldValue;
 
-        console.log(newFormData)
-
         setEditFormData(newFormData);
     };
 
     const handleEditFormSubmit = async () => {
-        await fetcher("/api/printer/editPrinter?id=" + editPrinterId, {
+        const res = await dirtyFetcher("/api/printer/editPrinter?id=" + editPrinterId, {
             method: "put",
             body: JSON.stringify(editPrinterData)
         });
+
+        
+        if (res.status === 200) {
+            notifySuccess(`${editPrinterData.name} is updated! 🎉`)
+        }
+
         mutate(`/api/printer/getPrinters?userId=${user.sub}`);
         setEditPrinterId(null);
+
     };
 
     const handleDeleteClick = async (printerId) => {
-        const res = await fetcher("/api/printer/deletePrinter", {
+        const res = await dirtyFetcher("/api/printer/deletePrinter", {
             method: "delete",
             body: JSON.stringify({ id: printerId })
         });
+
+        if (res.status === 200) {
+            notifySuccess(`Printer deleted! 🎉`)
+        }
+       
 
         mutate(`/api/printer/getPrinters?userId=${user.sub}`);
 
@@ -99,6 +140,7 @@ const PrinterTable = ({ user, filamentsData }) => {
 
     if (printersError) return <div>{printersError.message}</div>
     if (!printersData) return (
+
         <table className="animate-pulse min-w-max w-full table-auto ">
             <thead>
                 <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -161,6 +203,14 @@ const PrinterTable = ({ user, filamentsData }) => {
     )
     return (
         <>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                rtl={false}
+                draggable
+            />
             <div className="w-11/12 m-auto overflow-x-auto">
                 <table className="table-auto ">
                     <thead>

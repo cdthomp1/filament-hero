@@ -42,7 +42,7 @@ export default async (req, res) => {
 
             const updatedPrinter = await printer.save()
             console.log(updatedPrinter)
-            res.status(200).json(updatedPrinter)
+            res.status(200).json({message: 'All Done!'})
         } else {
             res.status(404).json({ message: "Printer not found 😩" })
         }

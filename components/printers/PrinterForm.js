@@ -124,32 +124,32 @@ const PrinterForm = ({ user, filamentsData }) => {
             />
             <form onSubmit={handleAddFormSubmit} className="text-center">
                 <div className="py-3 px-6">
-                    <label htmlFor="name">Name</label><br />
-                    <input type="text" name="name" className="border" onChange={handleAddFormChange} />
+                    <label htmlFor="name" className="text-lg">Name</label><br />
+                    <input type="text" name="name" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
-                    <label htmlFor="make">Make</label><br />
-                    <input type="text" name="make" className="border" onChange={handleAddFormChange} />
+                    <label htmlFor="make" className="text-lg">Make</label><br />
+                    <input type="text" name="make" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
-                    <label htmlFor="model">Model</label><br />
-                    <input type="text" name="model" className="border" onChange={handleAddFormChange} />
+                    <label htmlFor="model" className="text-lg">Model</label><br />
+                    <input type="text" name="model" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
-                    <label htmlFor="bedWidth">Bed Width</label><br />
-                    <input type="text" name="bedWidth" className="border" onChange={handleAddFormChange} />
+                    <label htmlFor="bedWidth" className="text-lg">Bed Width</label><br />
+                    <input type="text" name="bedWidth" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
-                    <label htmlFor="bedLength">Bed Length</label><br />
-                    <input type="text" name="bedLength" className="border" onChange={handleAddFormChange} />
+                    <label htmlFor="bedLength" className="text-lg">Bed Length</label><br />
+                    <input type="text" name="bedLength" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
-                    <label htmlFor="buildheight">Build Height</label><br />
-                    <input type="text" name="buildHeight" className="border" onChange={handleAddFormChange} />
+                    <label htmlFor="buildheight" className="text-lg">Build Height</label><br />
+                    <input type="text" name="buildHeight" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
-                    <label htmlFor="currentFilament">Curent Filament</label><br />
-                    <select type="text" name="currentFilament" className="border" onChange={handleAddFormChange} >
+                    <label htmlFor="currentFilament" className="text-lg">Curent Filament</label><br />
+                    <select type="text" name="currentFilament" className="border w-72" onChange={handleAddFormChange} >
                         <option value="">Filament</option>
                         {filamentsData.map((filament, index) => {
                             return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
@@ -157,8 +157,8 @@ const PrinterForm = ({ user, filamentsData }) => {
                     </select>
                 </div>
                 <div className="py-3 px-6">
-                    <label htmlFor="status">Status</label><br />
-                    <select type="text" name="status" className="border" onChange={handleAddFormChange}>
+                    <label htmlFor="status" className="text-lg">Status</label><br />
+                    <select type="text" name="status" className="border w-72" onChange={handleAddFormChange}>
                         <option value="">Status</option>
                         <option value="Active">Active</option>
                         <option value="Printing">Printing</option>
@@ -171,8 +171,8 @@ const PrinterForm = ({ user, filamentsData }) => {
                     <input type="file" name="image" id="" onChange={handleAddFormChange} />
                 </div> */}
                 <div className="py-3 px-6">
-                    <label htmlFor="notes">Notes</label><br />
-                    <textarea name="notes" name="notes" type="text" className="border" onChange={handleAddFormChange} />
+                    <label htmlFor="notes" className="text-lg">Notes</label><br />
+                    <textarea name="notes" name="notes" type="text" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
                     <button className="p-2 pl-5 pr-5 bg-transparent border-2 border-purple-500 text-purple-500 text-lg rounded-lg transition-colors duration-300 transform hover:bg-purple-500 hover:text-gray-100 focus:border-4 focus:border-purple-300" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Printer</button>
