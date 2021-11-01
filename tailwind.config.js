@@ -23,9 +23,6 @@ module.exports = {
         "100v": "100vh",
       },
     },
-    screens: {
-      'xs': '320px',
-    },
     maxWidth: {
       '1/8': '13%',
       '1/2': '50%',
