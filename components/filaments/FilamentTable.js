@@ -2,7 +2,8 @@ import React, { Fragment, useEffect, useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
-import FilamentForm from './FilamentForm'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -20,11 +21,16 @@ export default function FilamentTable({ user }) {
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
 
     const [editFilamentData, setEditFormData] = useState({
+        brand: "",
         type: "",
         color: "",
-        weight: 0,
+        length: 0,
         diameter: 0,
-        weight: 0
+        weight: 0,
+        printingNozelTemp: 0,
+        printingBedTemp: 0,
+        maxOverHangDistance: 0,
+        maxOverHangAngle: 0
     });
     const [editFilamentId, setEditFilamentId] = useState(null);
 
@@ -46,7 +52,7 @@ export default function FilamentTable({ user }) {
 
 
     const handleEditFormSubmit = async () => {
-        await fetcher("/api/filament/updateFilament?id=" + editFilamentId, {
+        await fetcher("/api/filament/editFilament?id=" + editFilamentId, {
             method: "put",
             body: JSON.stringify(editFilamentData)
         });
@@ -59,11 +65,16 @@ export default function FilamentTable({ user }) {
         setEditFilamentId(filament._id);
 
         const formValues = {
+            brand: filament.brand,
             type: filament.type,
             color: filament.color,
             length: filament.length,
             diameter: filament.diameter,
             weight: filament.weight,
+            printingNozelTemp: filament.printingNozelTemp,
+            printingBedTemp: filament.printingBedTemp,
+            maxOverHangDistance: filament.maxOverHangDistance,
+            maxOverHangAngle: filament.maxOverHangAngle
         };
 
         setEditFormData(formValues);
@@ -86,140 +97,202 @@ export default function FilamentTable({ user }) {
 
 
     if (filamentsError) return <div>{filamentsError.message}</div>
-    if (!filamentsData) return (<><table className="animate-pulse shadow-lg border-collapse border w-6/12 table-fixed mb-4">
-        <thead>
-            <tr>
-                <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                <th className="bg-gray-500 border text-xl">&nbsp;</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr className="h-4 even:bg-gray-100 ">
-                <td className="h-4">&nbsp;</td>
-                <td className="h-4">&nbsp;</td>
-                <td className="h-4">&nbsp;</td>
-                <td className="h-4">&nbsp;</td>
-                <td className="h-4">&nbsp;</td>
-                <td className="h-4">&nbsp;</td>
-            </tr>
-            <tr className="h-4 even:bg-gray-100 ">
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-            </tr>
-            <tr className="h-4 even:bg-gray-100 ">
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-                <td className="h-4 ">&nbsp;</td>
-            </tr>
+    if (!filamentsData) return (<>
+        {/* Skeleton Loader */}
+        <table className="animate-pulse min-w-max w-full table-auto ">
+            <thead>
+                <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                </tr>
+                <tr className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                </tr>
+                <tr className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                </tr>
 
-        </tbody>
-    </table></>)
+            </tbody>
+        </table>
+    </>)
 
     return (
-        <div className="flex flex-col w-7/12">
-            {filamentsData.length > 0 ?
-                <>
-                    <div className='grid grid-cols-5 gap-x-1 '>
-                        <div className="text-blue-700 dark:text-blue-400 lg:text-2xl">Type</div>
-                        <div className="text-blue-700 dark:text-blue-400 lg:text-2xl">Color</div>
-                        <div className="text-blue-700 dark:text-blue-400 lg:text-2xl">Weight</div>
-                        <div className=" text-blue-700 dark:text-blue-400 lg:text-2xl">Diameter</div>
-                    </div>
-                    {filamentsData.map((filament, index) => {
-                        return (
-                            <Fragment key={index}> {editFilamentId !== filament._id ? (
-                                <div className='grid grid-cols-5 gap-x-1 w-full border border-b-1'>
-                                    <div id="index" className="p-1">{filament.type}</div>
-                                    <div id="index" className="p-1">{filament.color}</div>
-                                    <div id="index" className="p-1">{filament.weight}</div>
-                                    <div id="index" className="p-1">{filament.diameter}</div>
-                                    <div id="index"><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, filament)}
-                                        icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(filament._id)} icon={faDumpster} /></div>
-                                </div>) : (
-                                <div className='grid grid-cols-5 gap-x-10'>
-                                    <div >
-                                        <input
-                                            className="border w-28"
-                                            type="text"
-                                            required="required"
-                                            placeholder="Enter a type..."
-                                            name="type"
-                                            value={editFilamentData.type}
-                                            onChange={handleEditFormChange}
-                                        />
-                                    </div>
 
-                                    <div>
-                                        <input
-                                            className="border w-28"
-                                            type="text"
-                                            required="required"
-                                            placeholder="Enter a color..."
-                                            name="color"
-                                            value={editFilamentData.color}
-                                            onChange={handleEditFormChange}
-                                        />
-                                    </div>
+        <>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                rtl={false}
+                draggable
+            />
+            <div className="w-11/12 m-auto overflow-x-auto">
+                <table className="table-auto ">
+                    <thead>
+                        <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th className="py-3 px-6 text-center w-1/12">Brand</th>
+                            <th className="py-3 px-6 text-center">type</th>
+                            <th className="py-3 px-6 text-center">Color</th>
+                            <th className="py-3 px-6 text-center w-1/12">Weight<br /><small>Grams</small></th>
+                            <th className="py-3 px-6 text-center">Diameter</th>
+                            <th className="py-3 px-0.5 text-center ">Nozzle Temp <small><span>&#176;</span>C</small></th>
+                            <th className="py-3 px-0.5 text-center ">Bed Temp <small><span>&#176;</span>C</small></th>
+                            <th className="py-3 px-6 text-center">Overhang Legnth</th>
+                            <th className="py-3 px-6 text-center">Overhang Angle</th>
+                            <th className="py-3 px-6 text-center w-1/3">Notes</th>
+                            <th className="py-3 px-6 text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-600 text-sm font-light">
+                        {filamentsData.map((filament, index) => {
+                            return (
+                                <Fragment key={index}> {editFilamentId !== filament._id ? (
+                                    <tr className="border-b border-gray-200 hover:bg-gray-100">
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex items-center justify-center">
+                                                {filament.brand}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center max-w-min">
+                                            <div className="flex items-center justify-center">
+                                                <div className="mr-2">
+                                                    {filament.type}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center max-w-min">
+                                            <div className="flex items-center justify-center">
+                                                {filament.color}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex items-center justify-center">
+                                                {filament.weight}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex item-center justify-center">
+                                                {filament.diameter}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex item-center justify-center">
+                                                {filament.printingNozelTemp}
+                                            </div>
+                                        </td>
 
-                                    <div>
-                                        <input
-                                            className="border w-28"
-                                            type="number"
-                                            step="0.01"
-                                            required="required"
-                                            placeholder="Enter weight (grams)"
-                                            name="weight"
-                                            value={editFilamentData.weight}
-                                            onChange={handleEditFormChange}
-                                        />
-                                    </div>
-                                    <div>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex item-center justify-center">
+                                                {filament.printingBedTemp}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            {filament.maxOverHangDistance}
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex item-center justify-center">
+                                                {filament.maxOverHangAngle}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex item-center justify-center">
+                                                {filament.notes}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex item-center justify-center">
+                                                <FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, filament)}
+                                                    icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(filament._id)} icon={faDumpster} />
+                                            </div>
+                                        </td>
+                                    </tr>) : (
+                                    <Fragment key={index}><tr className="border-b border-gray-200 hover:bg-gray-100">
+                                        <td class="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="brand" className="border w-28" value={editFilamentData.brand} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="type" className="border w-28" value={editFilamentData.type} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="color" className="border w-28" value={editFilamentData.color} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="weight" className="border w-28" value={editFilamentData.weight} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="printingNozelTemp" className="border w-28" value={editFilamentData.printingNozelTemp} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="printingBedTemp" className="border w-28" value={editFilamentData.printingBedTemp} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="maxOverHangDistance" className="border w-28" value={editFilamentData.maxOverHangDistance} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="maxOverHangAngle" className="border w-28" value={editFilamentData.maxOverHangAngle} onChange={handleEditFormChange} />
+                                        </td>
 
-                                        <input
-                                            className="border w-28"
-                                            type="number"
-                                            step="0.01"
-                                            required="required"
-                                            placeholder="Enter diameter..."
-                                            name="diameter"
-                                            value={editFilamentData.diameter}
-                                            onChange={handleEditFormChange}
-                                        />
-                                    </div>
-                                    <div className="w-28">
-                                        <button
-                                            onClick={handleEditFormSubmit}
-                                        ><FontAwesomeIcon className="m-1 cursor-pointer" icon={faSave} /></button>
-                                        <button type="button" onClick={handleCancelClick}>
-                                            <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
-                                        </button>
-                                    </div>
-                                </div>
-                            )
-                            }</Fragment>)
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input name="notes" name="notes" type="text" className="border w-28" value={editFilamentData.notes} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <button
+                                                onClick={handleEditFormSubmit}
+                                            ><FontAwesomeIcon className="m-1 cursor-pointer" icon={faSave} /></button>
+                                            <button type="button" onClick={handleCancelClick}>
+                                                <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
+                                            </button>
+                                        </td>
+                                    </tr> </Fragment>
+                                )
+                                }</Fragment>)
 
-                    })
-                    }
-                    <div className="mt-4"><FilamentForm user={user} onFormAdd={handleFormUpdate} /></div>
-                </>
-                :
-                <div className="flex flex-col justify-content-center">
-                    <p>Add Some Filament!</p>
-                    <FilamentForm user={user} onFormAdd={handleFormUpdate} />
-                </div>
-            }
-
-        </div >
+                        })
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </>
     )
 }
