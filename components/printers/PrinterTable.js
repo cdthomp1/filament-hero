@@ -109,7 +109,7 @@ const PrinterTable = ({ user, filamentsData }) => {
             body: JSON.stringify(editPrinterData)
         });
 
-        
+
         if (res.status === 200) {
             notifySuccess(`${editPrinterData.name} is updated! 🎉`)
         }
@@ -128,7 +128,7 @@ const PrinterTable = ({ user, filamentsData }) => {
         if (res.status === 200) {
             notifySuccess(`Printer deleted! 🎉`)
         }
-       
+
 
         mutate(`/api/printer/getPrinters?userId=${user.sub}`);
 
@@ -268,7 +268,7 @@ const PrinterTable = ({ user, filamentsData }) => {
 
                                     <td className="py-3 px-6 text-center">
                                         <div className="flex item-center justify-center">
-                                            <a href="#" className="text-purple-600">{`${printer.currentFilament.type} ${printer.currentFilament.color}`}</a>
+                                            {printer.currentFilament === null ? <></> : <a href="#" className="text-purple-600">{`${printer.currentFilament.type} ${printer.currentFilament.color}`}</a>}
                                         </div>
                                     </td>
                                     <td className="py-3 px-6 text-center">

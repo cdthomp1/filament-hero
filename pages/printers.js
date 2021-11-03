@@ -18,7 +18,7 @@ const fetcher = async (...args) => {
 
 export default withPageAuthRequired(function printers({ user }) {
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
-
+    
     return (
         <>
             <div className="flex flex-col items-center">
