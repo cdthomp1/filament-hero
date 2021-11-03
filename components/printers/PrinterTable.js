@@ -212,20 +212,20 @@ const PrinterTable = ({ user, filamentsData }) => {
                 draggable
             />
             <div className="w-11/12 m-auto overflow-x-auto">
-                <table className="table-auto ">
+                <table className="table-fixed">
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                            <th className="py-3 px-6 text-center">Name</th>
-                            <th className="py-3 px-6 text-center">Make</th>
-                            <th className="py-3 px-6 text-center">Model</th>
-                            <th className="py-3 px-6 text-center">Bed Width</th>
-                            <th className="py-3 px-6 text-center">Bed Legnth</th>
-                            <th className="py-3 px-6 text-center">Build Height</th>
-                            <th className="py-3 px-6 text-center">Current Filament</th>
-                            <th className="py-3 px-6 text-center">Status</th>
+                            <th className="py-3 px-6 text-center ">Name</th>
+                            <th className="py-3 px-6 text-center ">Make</th>
+                            <th className="py-3 px-6 text-center ">Model</th>
+                            <th className="py-3 px-6 text-center ">Bed Width</th>
+                            <th className="py-3 px-6 text-center ">Bed Legnth</th>
+                            <th className="py-3 px-6 text-center ">Build Height</th>
+                            <th className="py-3 px-6 text-center ">Current Filament</th>
+                            <th className="py-3 px-6 text-center ">Status</th>
                             {/* <th className="py-3 px-6 text-center">Picture</th> */}
-                            <th className="py-3 px-6 text-center">Current Print</th>
-                            <th className="py-3 px-6 text-center">Notes</th>
+                            <th className="py-3 px-6 text-center ">Current Print</th>
+                            <th className="py-3 px-6 text-center w-1/2">Notes</th>
                             <th className="py-3 px-6 text-center"></th>
                         </tr>
                     </thead>
