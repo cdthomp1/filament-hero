@@ -97,7 +97,7 @@ const PrinterForm = ({ user, filamentsData }) => {
         // const data = await res.json()
         
         if (res.status === 200) {
-            notifySuccess('Filament Created! 🎉');
+            notifySuccess('Printer Created! 🎉');
             event.target.reset()
         }
 

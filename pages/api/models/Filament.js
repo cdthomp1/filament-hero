@@ -3,6 +3,10 @@ mongoose.Promise = global.Promise;
 
 
 const filamentSchema = mongoose.Schema({
+    brand: {
+        type: String,
+        required: true,
+    },
     type: {
         type: String,
         required: true,

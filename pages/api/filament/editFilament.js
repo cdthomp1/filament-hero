@@ -7,6 +7,7 @@ export default async (req, res) => {
         const { id } = req.query;
         const jsonBody = JSON.parse(req.body);
         const result = await Filament.updateOne({_id: String(id)}, {
+            brand: jsonBody.brand,
             type: jsonBody.type, 
             color: jsonBody.color, 
             length: jsonBody.length, 

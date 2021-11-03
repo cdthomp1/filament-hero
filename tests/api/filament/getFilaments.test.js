@@ -13,8 +13,8 @@ beforeAll(async () => {
     process.env.MONGO_TEST = process.env.MONGO_TEST_URI;
     await connectDB();
     filament1 = await (new Filament({
-        type: "some-type", 
-        color: "some-colour", 
+        type: "some-type",
+        color: "some-colour",
         length: 1,
         userId: "123",
     })).save();
@@ -41,7 +41,7 @@ test('should get filament', async () => {
     res.status.mockReturnValueOnce(res);
 
     await getFilaments(req, res);
-    
+
     const filament = await Filament.findById(filament1._id);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json.mock.calls.length).toBe(1);
