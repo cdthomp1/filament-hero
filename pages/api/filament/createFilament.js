@@ -20,7 +20,7 @@ export default async (req, res) => {
             purchaseDate: jsonBody.purchaseDate,
             purchasePrice: jsonBody.purchasePrice,
             purchaseLocation: jsonBody.purchaseLocation,
-            generalNotes: jsonBody.generalNotes,
+            generalNotes: jsonBody.notes,
             picture: jsonBody.picture,
             userId: jsonBody.userId
         });
