@@ -40,23 +40,11 @@ export default function FilamentForm({ user }) {
         printingNozelTemp: 0,
         printingBedTemp: 0,
         maxOverHangDistance: 0,
-        maxOverHangAngle: 0
+        maxOverHangAngle: 0,
+        notes: ''
     });
 
-    const [editFilamentData, setEditFormData] = useState({
-        brand: "",
-        type: "",
-        color: "",
-        length: 0,
-        diameter: 0,
-        weight: 0,
-        printingNozelTemp: 0,
-        printingBedTemp: 0,
-        maxOverHangDistance: 0,
-        maxOverHangAngle: 0
-    });
 
-    const [editFilamentId, setEditFilamentId] = useState(null);
 
     const handleAddFormChange = (event) => {
         event.preventDefault();
@@ -86,6 +74,7 @@ export default function FilamentForm({ user }) {
                 printingBedTemp: addFormData.printingBedTemp,
                 maxOverHangDistance: addFormData.maxOverHangDistance,
                 maxOverHangAngle: addFormData.maxOverHangAngle,
+                notes: addFormData.notes,
                 userId: user.sub
             };
         }

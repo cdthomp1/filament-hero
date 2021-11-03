@@ -30,15 +30,10 @@ export default function FilamentTable({ user }) {
         printingNozelTemp: 0,
         printingBedTemp: 0,
         maxOverHangDistance: 0,
-        maxOverHangAngle: 0
+        maxOverHangAngle: 0,
+        generalNotes: ""
     });
     const [editFilamentId, setEditFilamentId] = useState(null);
-
-    const handleFormUpdate = (event) => {
-        console.log(event)
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-
-    }
 
     const handleEditFormChange = (event) => {
         event.preventDefault();
@@ -49,7 +44,6 @@ export default function FilamentTable({ user }) {
 
         setEditFormData(newFormData);
     };
-
 
     const handleEditFormSubmit = async () => {
         await fetcher("/api/filament/editFilament?id=" + editFilamentId, {
@@ -74,7 +68,8 @@ export default function FilamentTable({ user }) {
             printingNozelTemp: filament.printingNozelTemp,
             printingBedTemp: filament.printingBedTemp,
             maxOverHangDistance: filament.maxOverHangDistance,
-            maxOverHangAngle: filament.maxOverHangAngle
+            maxOverHangAngle: filament.maxOverHangAngle,
+            generalNotes: filament.generalNotes
         };
 
         setEditFormData(formValues);
@@ -237,7 +232,7 @@ export default function FilamentTable({ user }) {
                                         </td>
                                         <td className="py-3 px-6 text-center">
                                             <div className="flex item-center justify-center">
-                                                {filament.notes}
+                                                {filament.generalNotes}
                                             </div>
                                         </td>
                                         <td className="py-3 px-6 text-center">
@@ -261,6 +256,9 @@ export default function FilamentTable({ user }) {
                                             <input type="text" name="weight" className="border w-28" value={editFilamentData.weight} onChange={handleEditFormChange} />
                                         </td>
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <input type="text" name="diameter" className="border w-28" value={editFilamentData.diameter} onChange={handleEditFormChange} />
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
                                             <input type="text" name="printingNozelTemp" className="border w-28" value={editFilamentData.printingNozelTemp} onChange={handleEditFormChange} />
                                         </td>
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
@@ -274,7 +272,7 @@ export default function FilamentTable({ user }) {
                                         </td>
 
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
-                                            <input name="notes" name="notes" type="text" className="border w-28" value={editFilamentData.notes} onChange={handleEditFormChange} />
+                                            <input  name="generalNotes" type="text" className="border w-28" value={editFilamentData.generalNotes} onChange={handleEditFormChange} />
                                         </td>
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
                                             <button
