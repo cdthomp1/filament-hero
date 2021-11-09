@@ -18,11 +18,7 @@ const fetcher = async (...args) => {
 
 const dirtyFetcher = async (...args) => {
     const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
+      
     return res
 }
 
@@ -93,7 +89,12 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`${editPrintData.name} is updated! 🎉`)
+        }else if (res.status === 404 ) {
+            notifyError(`Print could not be found 😩`)
+        } else if (res.status === 500) {
+            notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
         }
+
         mutate(`/api/print/getPrints?userId=${user.sub}`);
         SetEditPrintId(null);
     };
@@ -136,6 +137,10 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`Print deleted! 🎉`)
+        } else if (res.status === 404 ) {
+            notifyError(`Print could not be found 😩`)
+        } else if (res.status === 500) {
+            notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
         }
 
         mutate(`/api/print/getPrints?userId=${user.sub}`);
