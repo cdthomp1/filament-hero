@@ -129,11 +129,14 @@ export default function PrintsTable({ user }) {
     };
 
     const handleDeleteClick = async (printId) => {
-        const res = await fetcher("/api/print/deletePrint", {
+        const res = await dirtyFetcher("/api/print/deletePrint", {
             method: "delete",
             body: JSON.stringify({ id: printId })
         });
 
+        if (res.status === 200) {
+            notifySuccess(`Print deleted! 🎉`)
+        }
 
         mutate(`/api/print/getPrints?userId=${user.sub}`);
 
