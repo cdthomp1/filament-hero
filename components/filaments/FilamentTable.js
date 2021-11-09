@@ -2,20 +2,13 @@ import React, { Fragment, useEffect, useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { fetcher } from '../../lib/fetchers'
+
+import { notifySuccess, notifyError } from '../../lib/toasts';
 
 
-
-const fetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
-    return data
-}
 
 export default function FilamentTable({ user }) {
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)

@@ -3,49 +3,13 @@ import useSWR, { mutate } from 'swr'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { fetcher, dirtyFetcher } from '../../lib/fetchers'
+import { notifySuccess, notifyError } from '../../lib/toasts';
 
 
 
-
-const fetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
-    return data
-}
-
-const dirtyFetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
-    return res
-}
-
-const notifySuccess = (message) => {
-    console.log('hello')
-    toast.success(message, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        draggable: true,
-    });
-
-};
-
-const notifyError = (message) => toast.error(message, {
-    position: "bottom-right",
-    autoClose: 3000,
-    hideProgressBar: true,
-    draggable: true,
-});
 
 const PrinterTable = ({ user, filamentsData }) => {
     var { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
