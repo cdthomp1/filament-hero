@@ -347,8 +347,6 @@ const PrinterTable = ({ user, filamentsData }) => {
                             </Fragment>
                             )
                         })}
-
-
                     </tbody>
                 </table>
             </div>

@@ -1,114 +1,37 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
-import PrintsTable from '../components/prints/PrintsTable'
+import Link from 'next/link'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import PrintsTable from '../components/prints/PrintsTable'
 
+import useSWR from 'swr'
+
+
+const fetcher = async (...args) => {
+    const res = await fetch(...args)
+    const data = await res.json()
+
+    if (res.status !== 200) {
+        throw new Error(data.message)
+    }
+    return data
+}
 
 export default withPageAuthRequired(function print({ user }) {
-
+    const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
+    var { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
     return (
-        <div>
-            <h1>All Prints</h1>
+        <>
+                        <div className="flex flex-col items-center">
 
-            {/* <div class="overflow-x-auto">
-                <table class="min-w-max w-full table-auto ">
-                    <thead>
-                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left">Name</th>
-                            <th class="py-3 px-6 text-left">Printer</th>
-                            <th class="py-3 px-6 text-center">EST. Print<br />Time</th>
-                            <th class="py-3 px-6 text-center">ACT. Print Time</th>
-                            <th class="py-3 px-6 text-center">Status</th>
-                            <th class="py-3 px-6 text-center">Filament</th>
-                            <th class="py-3 px-6 text-center">Settings</th>
-                            <th class="py-3 px-6 text-center">Part</th>
-                            <th class="py-3 px-6 text-center">Nozzle Size</th>
-                            <th class="py-3 px-6 text-center">Weight</th>
-                            <th class="py-3 px-6 text-center">Date</th>
-                            <th class="py-3 px-6 text-center">Notes</th>
-                            <th class="py-3 px-6 text-center"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-600 text-sm font-light">
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <td class="py-3 px-6 text-left whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <span class="font-medium">PRINT NAME</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-left">
-                                <div class="flex items-center">
-                                    <div class="mr-2">
-                                        Ender 3 Pro<br />
-                                        Creality
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex items-center justify-center">
-                                    <p>5</p>
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex items-center justify-center">
-                                    <p>5</p>
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">Active</span>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    PLA
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    LINK TO SETTINGS
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    Link to Part
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    0.4 mm
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    1 Gram
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    {Date.now()}
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    Watch for bed lift
-                                </div>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    <button><FontAwesomeIcon className="m-1 cursor-pointer hover:text-purple-500" icon={faSave} /></button>
-                                    <button type="button">
-                                        <FontAwesomeIcon className="m-1 cursor-pointer hover:text-purple-500" icon={faWindowClose} />
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                <h1 className="text-4xl text-center p-6">Prints</h1>
 
-                    </tbody>
-                </table>
-            </div> */}
-            <PrintsTable user={user} />
+                <PrintsTable user={user} filamentsData={filamentsData} printersData={printersData} />
+                <div className="m-6">
+                    <Link href="/addPrint"><button className="p-2 pl-5 pr-5 bg-transparent border-2 border-purple-500 text-purple-500 text-lg rounded-lg transition-colors duration-300 transform hover:bg-purple-500 hover:text-gray-100 focus:border-4 focus:border-purple-300">Add a Print!</button></Link>
 
-        </div>
+                </div>
+            </div>
+        </>
 
     )
 })

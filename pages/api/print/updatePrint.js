@@ -21,19 +21,26 @@ export default async (req, res) => {
 
         await connectDB();
         const { id } = req.query
-        const { name, description, filament, duration, weight, user } = JSON.parse(req.body)
+        const { name, printer, filamentId, estPrintTime, actPrintTime, status, weight, date, notes, userId } = JSON.parse(req.body)
+
+        console.log(filamentId)
 
         const print = await Print.findById(id)
 
         if (print) {
 
-            print.name = name
-            print.description = description
-            print.filament = filament
-            print.duration = duration
-            print.weight = weight
-            print.user = user
 
+
+            print.name = name
+            print.printer = printer._id
+            print.estPrintTime = estPrintTime
+            print.actPrintTime = actPrintTime
+            print.filamentId = filamentId._id
+            print.notes = notes
+            print.status = status
+            print.weight = weight
+            print.date = date
+            print.userId = userId
 
             const updatedPrint = await print.save()
             res.status(200).json(updatedPrint)
@@ -42,6 +49,7 @@ export default async (req, res) => {
         }
     }
     catch (error) {
+        console.error(error)
         res.status(500).json({ message: error })
 
     }
