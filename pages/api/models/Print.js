@@ -8,7 +8,8 @@ const printSchema = mongoose.Schema({
         required: true,
     },
     printer: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'printer',
         required: true
     },
     stlUrl: {
@@ -21,7 +22,8 @@ const printSchema = mongoose.Schema({
         type: String,
     },
     filamentId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'filament',
         required: true
     },
     notes: {
