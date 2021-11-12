@@ -49,7 +49,6 @@ export default function PrintsTable({ user }) {
 
     const handleEditFormSubmit = async () => {
 
-        console.log(editPrintData)
 
         const res = await dirtyFetcher("/api/print/updatePrint?id=" + editPrintId, {
             method: "put",
@@ -162,14 +161,6 @@ export default function PrintsTable({ user }) {
 
     return (
         <>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                rtl={false}
-                draggable
-            />
             <div className="w-11/12 m-auto overflow-x-auto">
                 <table className="table-fixed">
                     <thead>

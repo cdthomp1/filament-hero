@@ -5,7 +5,6 @@ export default async (req, res) => {
     try {
         await connectDB();
         const jsonBody = JSON.parse(req.body);
-        console.log(jsonBody)
         const newFilament = new Filament({
             brand: jsonBody.brand,
             type: jsonBody.type,
