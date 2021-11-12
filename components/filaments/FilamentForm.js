@@ -1,35 +1,15 @@
 import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import { ToastContainer, toast } from 'react-toastify';
+import { fetcher, dirtyFetcher } from '../../lib/fetchers'
+import { notifySuccess, notifyError } from '../../lib/toasts';
 
-import 'react-toastify/dist/ReactToastify.css';
-const fetcher = async (...args) => {
-    const res = await fetch(...args)
-    return res
-}
-
-const notifySuccess = (message) => {
-    toast.success(message, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        draggable: true,
-    });
-
-};
-
-const notifyError = (message) => toast.error(message, {
-    position: "bottom-right",
-    autoClose: 3000,
-    hideProgressBar: true,
-    draggable: true,
-});
 
 export default function FilamentForm({ user }) {
-
+    const router = useRouter();
     const [addFormData, setAddFormData] = useState({
         brand: "",
         type: "",
@@ -78,14 +58,18 @@ export default function FilamentForm({ user }) {
                 userId: user.sub
             };
         }
-        var res = await fetcher("/api/filament/createFilament", {
+        var res = await dirtyFetcher("/api/filament/createFilament", {
             method: "post",
             body: JSON.stringify(newFilament)
         });
 
         if (res.status === 200) {
-            notifySuccess('Filament Created! 🎉');
             event.target.reset()
+            notifySuccess('Filament Created! 🎉');
+            router.push({
+                pathname: '/filaments',
+            })
+
         } else {
             notifyError('Something went wrong on the server! 😩')
         }
@@ -93,15 +77,6 @@ export default function FilamentForm({ user }) {
     };
     return (
         <div className="border-b border-gray-200 flex flex-col justify-center">
-
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                rtl={false}
-                draggable
-            />
             <form onSubmit={handleAddFormSubmit} className="text-center">
                 <div className="py-3 px-6">
                     <label htmlFor="brand" className="text-lg">Brand</label><br />
