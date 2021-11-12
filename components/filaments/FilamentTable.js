@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetcher } from '../../lib/fetchers'
+import { dirtyFetcher, fetcher } from '../../lib/fetchers'
 
 import { notifySuccess, notifyError } from '../../lib/toasts';
 
@@ -39,12 +39,18 @@ export default function FilamentTable({ user }) {
     };
 
     const handleEditFormSubmit = async () => {
-        await fetcher("/api/filament/editFilament?id=" + editFilamentId, {
+        var res = await dirtyFetcher("/api/filament/editFilament?id=" + editFilamentId, {
             method: "put",
             body: JSON.stringify(editFilamentData)
         });
         mutate(`/api/filament/getFilaments?userId=${user.sub}`);
         setEditFilamentId(null);
+
+        if (res.status === 200) {
+            notifySuccess(`${editFilamentData.brand} ${editFilamentData.type} ${editFilamentData.color} updated! 🎉`)
+        } else {
+            notifyError(`A server error occured. ${res.message}`)
+        }
     };
 
     const handleEditClick = (event, filament) => {
@@ -73,10 +79,16 @@ export default function FilamentTable({ user }) {
     };
 
     const handleDeleteClick = async (filamentId) => {
-        const res = await fetcher("/api/filament/deleteFilament", {
+        const res = await dirtyFetcher("/api/filament/deleteFilament", {
             method: "delete",
             body: JSON.stringify({ id: filamentId })
         });
+
+        if (res.status === 200) {
+            notifySuccess('Filament Deleted 🎉')
+        } else {
+            notifyError(`A server error occured. ${res.message}`)
+        }
 
         mutate(`/api/filament/getFilaments?userId=${user.sub}`);
     };
@@ -147,14 +159,6 @@ export default function FilamentTable({ user }) {
     return (
 
         <>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                rtl={false}
-                draggable
-            />
             <div className="w-11/12 m-auto overflow-x-auto">
                 <table className="table-auto ">
                     <thead>
@@ -265,7 +269,7 @@ export default function FilamentTable({ user }) {
                                         </td>
 
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
-                                            <input  name="generalNotes" type="text" className="border w-28" value={editFilamentData.generalNotes} onChange={handleEditFormChange} />
+                                            <input name="generalNotes" type="text" className="border w-28" value={editFilamentData.generalNotes} onChange={handleEditFormChange} />
                                         </td>
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
                                             <button
