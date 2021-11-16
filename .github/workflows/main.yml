@@ -19,18 +19,16 @@ jobs:
   test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    
-    
-    # Environment Variables
-    env:
-      MONGO_TEST_URI: ${{ secrets.MONGO_TEST_URI }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: quick echo
-        run: echo ${{ secrets.MONGO_TEST_URI }}
+      - shell: pwsh
+        env:
+            MONGO_TEST_URI: ${{ secrets.MONGO_TEST_URI }}
+        run: |
+          "$env:MONGO_TEST_URI"
       # Runs a single command using the runners shell
       - name: npm install 
         run: npm i
