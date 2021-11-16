@@ -24,11 +24,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - shell: pwsh
-        env:
-            MONGO_TEST_URI: ${{ secrets.MONGO_TEST_URI }}
+      - name: TEST SECRET
         run: |
-          "$env:MONGO_TEST_URI"
+          if ["$TEST_SECRET" == "Hello"]
+          then
+            echo "Got Hello"
+          fi
+        env:
+           TEST_SECRET: ${{ secrets.TEST }}
       # Runs a single command using the runners shell
       - name: npm install 
         run: npm i
