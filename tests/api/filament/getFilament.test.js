@@ -41,7 +41,6 @@ test('should get filament', async () => {
         json: jest.fn()
     };
     res.status.mockReturnValueOnce(res);
-
     await getFilament(req, res);
 
     const filament = await Filament.findById(filament1._id);
