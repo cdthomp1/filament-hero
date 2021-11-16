@@ -30,7 +30,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - name: quick echo
-        run: echo env.MONGO_TEST_URI
+        run: echo ${{ secrets.MONGO_TEST_URI }}
       # Runs a single command using the runners shell
       - name: npm install 
         run: npm i
