@@ -14,7 +14,6 @@
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.4",
     "dotenv": "^10.0.0",
-    "jest": "^27.3.1",
     "mongodb": "^3.6.11",
     "mongoose": "^5.13.7",
     "next": "latest",
@@ -26,9 +25,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
     "@babel/preset-env": "^7.15.8",
     "autoprefixer": "^10.2.6",
     "babel-jest": "^27.3.1",
+    "jest": "^27.3.1",
     "postcss": "^8.3.5",
     "tailwindcss": "^2.2.4"
   }

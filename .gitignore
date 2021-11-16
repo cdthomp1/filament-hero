@@ -33,3 +33,4 @@ yarn-error.log*
 # vercel
 .vercel
 tests/api/.env
+.env
