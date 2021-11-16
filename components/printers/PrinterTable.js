@@ -3,8 +3,6 @@ import useSWR, { mutate } from 'swr'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { fetcher, dirtyFetcher } from '../../lib/fetchers'
 import { notifySuccess, notifyError } from '../../lib/toasts';
 
@@ -167,14 +165,6 @@ const PrinterTable = ({ user, filamentsData }) => {
     )
     return (
         <>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                rtl={false}
-                draggable
-            />
             <div className="w-11/12 m-auto overflow-x-auto">
                 <table className="table-fixed">
                     <thead>

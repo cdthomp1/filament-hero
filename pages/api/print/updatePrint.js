@@ -8,10 +8,8 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useCreateIndex: true
         })
-        console.log(`MongoDB Connect: ${conn.connection.host}`)
 
     } catch (err) {
-        console.error(`Error: ${err.message}`);
         process.exit(1);
     }
 }
@@ -23,7 +21,6 @@ export default async (req, res) => {
         const { id } = req.query
         const { name, printer, filamentId, estPrintTime, actPrintTime, status, weight, date, notes, userId } = JSON.parse(req.body)
 
-        console.log(filamentId)
 
         const print = await Print.findById(id)
 
@@ -49,7 +46,6 @@ export default async (req, res) => {
         }
     }
     catch (error) {
-        console.error(error)
         res.status(500).json({ message: error })
 
     }

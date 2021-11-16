@@ -8,10 +8,8 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useCreateIndex: true
         })
-        console.log(`MongoDB Connect: ${conn.connection.host}`)
 
     } catch (err) {
-        console.error(`Error: ${err.message}`);
         process.exit(1);
     }
 }
@@ -22,9 +20,7 @@ export default async (req, res) => {
         await connectDB();
         const { id } = req.query
         const { name, make, model, bedWidth, bedLength, buildHeight, description, currentFilament, status, notes } = JSON.parse(req.body)
-        console.log(name)
         const printer = await Printer.findById(id)
-        console.log(printer)
 
         if (printer) {
 
@@ -41,14 +37,12 @@ export default async (req, res) => {
             printer.notes = notes
 
             const updatedPrinter = await printer.save()
-            console.log(updatedPrinter)
             res.status(200).json({message: 'All Done!'})
         } else {
             res.status(404).json({ message: "Printer not found 😩" })
         }
     }
     catch (error) {
-        console.log(error)
         res.status(500).json({ message: error })
 
     }

@@ -1,42 +1,19 @@
 import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+
 import { mutate } from 'swr'
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { ToastContainer, toast } from 'react-toastify';
 
-import 'react-toastify/dist/ReactToastify.css';
+import { fetcher, dirtyFetcher } from '../../lib/fetchers'
+import { notifySuccess, notifyError } from '../../lib/toasts';
 
-const fetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        //throw new Error(data.message)
-        notifyError('Not all form fields are filled out')
-    }
-    return res
-}
-
-const notifySuccess = (message) => {
-    toast.success(message, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        draggable: true,
-    });
-
-};
-
-const notifyError = (message) => toast.error(message, {
-    position: "bottom-right",
-    autoClose: 3000,
-    hideProgressBar: true,
-    draggable: true,
-});
 
 const PrinterForm = ({ user, filamentsData }) => {
+    const router = useRouter();
+
     const [addFormData, setAddFormData] = useState({
         name: "",
         make: "",
@@ -89,16 +66,19 @@ const PrinterForm = ({ user, filamentsData }) => {
 
 
 
-        var res = await fetcher("/api/printer/createPrinter", {
+        var res = await dirtyFetcher("/api/printer/createPrinter", {
             method: "post",
             body: JSON.stringify(newPrinter)
         });
 
         // const data = await res.json()
-        
+
         if (res.status === 200) {
-            notifySuccess('Printer Created! 🎉');
             event.target.reset()
+            notifySuccess('Printer Created! 🎉');
+            router.push({
+                pathname: '/printers',
+            })
         }
 
     };
@@ -113,15 +93,7 @@ const PrinterForm = ({ user, filamentsData }) => {
 
     return (
         <div className="border-b border-gray-200 flex flex-col justify-center">
-            
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                rtl={false}
-                draggable
-            />
+
             <form onSubmit={handleAddFormSubmit} className="text-center">
                 <div className="py-3 px-6">
                     <label htmlFor="name" className="text-lg">Name</label><br />

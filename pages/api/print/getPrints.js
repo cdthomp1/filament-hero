@@ -8,10 +8,8 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useCreateIndex: true
         })
-        console.log(`MongoDB Connect: ${conn.connection.host}`)
 
     } catch (err) {
-        console.error(`Error: ${err.message}`);
         process.exit(1);
     }
 }
@@ -25,6 +23,5 @@ export default async (req, res) => {
     await connectDB();
     var id = req.query.userId
     const allPrints = await getPrints(id)
-    console.log(allPrints)
     res.status(200).json(allPrints)
 }

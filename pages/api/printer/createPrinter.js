@@ -11,7 +11,6 @@ const connectDB = async () => {
             useCreateIndex: true
         })
     } catch (err) {
-        console.error(`Error: ${err.message}`);
         process.exit(1);
     }
 }
@@ -19,7 +18,6 @@ const connectDB = async () => {
 export default async (req, res) => {
     try {
         await connectDB();
-        console.log(req.body)
         const newPrinter = new Printer(JSON.parse(req.body))
 
         const createdPrinter = await newPrinter.save()

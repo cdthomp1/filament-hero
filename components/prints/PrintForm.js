@@ -3,53 +3,10 @@ import { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import { ToastContainer, toast } from 'react-toastify';
-
-import 'react-toastify/dist/ReactToastify.css';
-
-const fetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
-    return data
-}
-
-const dirtyFetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
-    return res
-}
-
-const notifySuccess = (message) => {
-    console.log('Hello')
-
-    toast.success(message, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        draggable: true,
-    });
-
-};
-
-const notifyError = (message) => {
-    toast.error(message, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        draggable: true,
-    });
-}
+import { fetcher, dirtyFetcher } from '../../lib/fetchers'
+import { notifySuccess, notifyError } from '../../lib/toasts';
 
 const PrintForm = ({ user, filamentsData, printersData }) => {
-
-
     const [addFormData, setAddFormData] = useState({
         name: "",
         printer: "",
@@ -164,14 +121,6 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
 
     return (
         <>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                rtl={false}
-                draggable
-            />
             <form className="text-center" onSubmit={handleAddFormSubmit}>
                 <div className="py-3 px-6">
                     <label htmlFor="name" className="text-lg">Name</label><br />
