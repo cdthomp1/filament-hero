@@ -16,18 +16,33 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    
+    
+    # Environment Variables
+    env:
+      MONGO_TEST_URI: mongodb://localhost:27017/filamentHero 
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
+      - name: Create mongo Docker container
+        id: build_mongo_docker
+        uses: yog27ray/mongo-inmemory-action@v1.1.0
+        with:
+          image-version: latest
+          port: 27017
+      - name: Test mongo connection
+        id: test_mongo_connection
+        run: "sudo mongo localhost:27017"
+        
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: npm install
+        run: npm i
       - name: Run the tests
         run: npm run test
 
