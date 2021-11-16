@@ -46,7 +46,7 @@ test('should get filament', async () => {
     await getFilaments(req, res);
 
     const filament = await Filament.findById(filament1._id);
-    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json.mock.calls.length).toBe(1);
     const result = res.json.mock.calls[0][0];
     expect(result.length).toBe(1);
