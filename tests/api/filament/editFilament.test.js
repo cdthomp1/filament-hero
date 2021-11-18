@@ -32,6 +32,7 @@ afterAll(() => {
 
 test('should edit filament', async () => {
     const filamentObj = {
+        brand:"test",
         type: "some-new-type",
         color: "some-new-colour",
         length: 1,
