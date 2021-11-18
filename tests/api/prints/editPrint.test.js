@@ -29,7 +29,7 @@ afterAll(() => {
     mongoose.disconnect();
 })
 
-test('should edit filament', async () => {
+test('should edit a print', async () => {
     const printObj = {
         name: "updated test print",
         printer: new mongoose.Types.ObjectId().toString(),
