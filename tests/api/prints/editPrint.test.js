@@ -1,11 +1,10 @@
-import addPrint from "../../../pages/api/print/addPrint";
-import Print from "../../../pages/api/models/Print";
-
 import connectDB from "../../../lib/connectDb";
+import updatePrint from "../../../pages/api/print/updatePrint";
+import Print from "../../../pages/api/models/Print";
 const mongoose = require('mongoose');
 require("dotenv").config()
-let filament;
-let printer;
+
+let print1;
 
 beforeAll(async () => {
     if (!process.env.MONGO_TEST_URI) {
@@ -13,8 +12,13 @@ beforeAll(async () => {
         process.exit();
     }
     process.env.MONGO_URI = process.env.MONGO_TEST_URI;
-    await connectDB();
 
+    await connectDB();
+    print1 = await new Print({
+        name: "test print",
+        printer: new mongoose.Types.ObjectId().toString(),
+        filamentId: new mongoose.Types.ObjectId().toString()
+    }).save();
 });
 
 afterEach(async () => {
@@ -25,13 +29,16 @@ afterAll(() => {
     mongoose.disconnect();
 })
 
-test('should create a print', async () => {
+test('should edit filament', async () => {
     const printObj = {
-        name: "test print",
+        name: "updated test print",
         printer: new mongoose.Types.ObjectId().toString(),
         filamentId: new mongoose.Types.ObjectId().toString()
     };
     const req = {
+        query: {
+            id: print1._id
+        },
         body: JSON.stringify(printObj)
     };
     const res = {
@@ -40,10 +47,10 @@ test('should create a print', async () => {
     };
     res.status.mockReturnValueOnce(res);
 
-    await addPrint(req, res);
+    await updatePrint(req, res);
 
-    const print = await Print.findOne({ name: "test print" });
+    const print = await Print.findById(print1._id);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json.mock.calls.length).toBe(1);
-    expect(print).toBeDefined();
+    expect(print.name).toBe("updated test print");
 });

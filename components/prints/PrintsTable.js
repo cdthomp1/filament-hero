@@ -29,7 +29,7 @@ export default function PrintsTable({ user }) {
         date: "",
         userId: ""
     });
-    
+
     const [editPrintId, SetEditPrintId] = useState(null);
 
 
@@ -47,6 +47,7 @@ export default function PrintsTable({ user }) {
 
     const handleEditFormSubmit = async () => {
 
+        console.log(editPrintData)
 
         const res = await dirtyFetcher("/api/print/updatePrint?id=" + editPrintId, {
             method: "put",
@@ -55,7 +56,7 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`${editPrintData.name} is updated! 🎉`)
-        }else if (res.status === 404 ) {
+        } else if (res.status === 404) {
             notifyError(`Print could not be found 😩`)
         } else if (res.status === 500) {
             notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
@@ -76,7 +77,7 @@ export default function PrintsTable({ user }) {
             stlUrl: print.stlUrl,
             estPrintTime: print.estPrintTime,
             actPrintTime: print.actPrintTime,
-            filamentId: print.filamentId,
+            filamentId: print.filamentId._id,
             notes: print.notes,
             status: print.status,
             partId: print.partId,
@@ -87,6 +88,8 @@ export default function PrintsTable({ user }) {
             date: print.date,
             userId: user.sub
         };
+
+        console.log(formValues)
 
         setEditFormData(formValues);
     };
@@ -103,7 +106,7 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`Print deleted! 🎉`)
-        } else if (res.status === 404 ) {
+        } else if (res.status === 404) {
             notifyError(`Print could not be found 😩`)
         } else if (res.status === 500) {
             notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
@@ -280,7 +283,7 @@ export default function PrintsTable({ user }) {
                                                 </select>
                                             </td>
                                             <td className="py-3 px-6 text-center whitespace-nowrap">
-                                                <select type="text" name="currentFilament" className="border" onChange={handleEditFormChange} >
+                                                <select type="text" name="filamentId" className="border" onChange={handleEditFormChange} >
                                                     <option value="">Filament</option>
                                                     {filamentsData.map((filament, index) => {
                                                         return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
