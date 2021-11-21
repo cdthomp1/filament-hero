@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Printer = require('../models/Printers');
+const Printer = require('../models/Printer');
 import { MongoClient } from "mongodb";
 
 
