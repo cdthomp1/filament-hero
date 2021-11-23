@@ -1,6 +1,6 @@
 import connectDB from "../../../lib/connectDb";
 import getPrinters from "../../../pages/api/printer/getPrinters";
-import Printer from "../../../pages/api/models/Printer";
+import Printer from "../../../pages/api/models/Print";
 const mongoose = require('mongoose');
 require("dotenv").config()
 
@@ -31,7 +31,7 @@ afterAll(() => {
     mongoose.disconnect();
 })
 
-test('should get filament', async () => {
+test('should get printers', async () => {
     const req = {
         query: {
             userId: "123"

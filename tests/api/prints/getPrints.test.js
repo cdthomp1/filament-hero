@@ -33,7 +33,7 @@ afterAll(() => {
     mongoose.disconnect();
 })
 
-test('should get print', async () => {
+test('should get prints', async () => {
     const req = {
         query: {
             userId: "123"

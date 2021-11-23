@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Print = require('../models/Print');
-const Printer = require('../models/Printers');
+const Printer = require('../models/Printer');
 
 const connectDB = async () => {
     try {
