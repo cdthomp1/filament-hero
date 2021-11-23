@@ -21,18 +21,14 @@ export default async (req, res) => {
         const { id } = req.query
         const { name, printer, filamentId, estPrintTime, actPrintTime, status, weight, date, notes, userId } = JSON.parse(req.body)
 
-
         const print = await Print.findById(id)
 
         if (print) {
-
-
-
             print.name = name
-            print.printer = printer._id
+            print.printer = printer
             print.estPrintTime = estPrintTime
             print.actPrintTime = actPrintTime
-            print.filamentId = filamentId._id
+            print.filamentId = filamentId
             print.notes = notes
             print.status = status
             print.weight = weight
@@ -47,8 +43,5 @@ export default async (req, res) => {
     }
     catch (error) {
         res.status(500).json({ message: error })
-
     }
-
-
 }
