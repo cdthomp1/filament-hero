@@ -16,7 +16,7 @@ beforeAll(async () => {
     process.env.MONGO_URI = process.env.MONGO_TEST_URI;
 
     await connectDB();
-0
+
     print1 = await new Print({
         name: "test print",
         printer: new mongoose.Types.ObjectId().toString(),
@@ -47,7 +47,7 @@ test('should get prints', async () => {
 
     await getPrints(req, res);
 
-    //const print = await Print.findById(print1._id);
+    const print = await Print.findById(print1._id);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json.mock.calls.length).toBe(1);
     const result = res.json.mock.calls[0][0];
