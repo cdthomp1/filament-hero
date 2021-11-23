@@ -1,6 +1,6 @@
 import connectDB from "../../../lib/connectDb";
 import getPrinters from "../../../pages/api/printer/getPrinters";
-import Printer from "../../../pages/api/models/Print";
+import Printer from "../../../pages/api/models/Printer";
 const mongoose = require('mongoose');
 require("dotenv").config()
 
