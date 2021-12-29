@@ -3,10 +3,7 @@ import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { dirtyFetcher, fetcher } from '../../lib/fetchers'
-
 import { notifySuccess, notifyError } from '../../lib/toasts';
-
-
 
 export default function FilamentTable({ user }) {
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
@@ -90,9 +87,6 @@ export default function FilamentTable({ user }) {
 
         mutate(`/api/filament/getFilaments?userId=${user.sub}`);
     };
-
-
-
 
     if (filamentsError) return <div>{filamentsError.message}</div>
     if (!filamentsData) return (<>
@@ -279,7 +273,6 @@ export default function FilamentTable({ user }) {
                                     </tr> </Fragment>
                                 )
                                 }</Fragment>)
-
                         })
                         }
                     </tbody>

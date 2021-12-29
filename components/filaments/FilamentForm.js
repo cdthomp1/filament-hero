@@ -1,12 +1,9 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
-import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-
-import { fetcher, dirtyFetcher } from '../../lib/fetchers'
+import { dirtyFetcher } from '../../lib/fetchers'
 import { notifySuccess, notifyError } from '../../lib/toasts';
-
 
 export default function FilamentForm({ user }) {
     const router = useRouter();
@@ -24,8 +21,6 @@ export default function FilamentForm({ user }) {
         notes: ''
     });
 
-
-
     const handleAddFormChange = (event) => {
         event.preventDefault();
 
@@ -37,7 +32,6 @@ export default function FilamentForm({ user }) {
 
         setAddFormData(newFormData);
     };
-
 
     const handleAddFormSubmit = async (event) => {
         event.preventDefault();
@@ -121,5 +115,3 @@ export default function FilamentForm({ user }) {
         </div>
     )
 }
-
-

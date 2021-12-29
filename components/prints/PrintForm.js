@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-
 import { fetcher, dirtyFetcher } from '../../lib/fetchers'
 import { notifySuccess, notifyError } from '../../lib/toasts';
 
@@ -98,20 +97,10 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
             body: JSON.stringify(updatedFilament)
         });
 
-
         if (res.status === 200) {
             notifySuccess('Print Created! 🎉');
             event.target.reset()
         }
-    };
-
-    const handleEditFormSubmit = async () => {
-        await fetcher("/api/print/updatePrint?id=" + editPrintId, {
-            method: "put",
-            body: JSON.stringify(editPrintData)
-        });
-        mutate(`/api/print/getPrints?userId=${user.sub}`);
-        SetEditPrintId(null);
     };
 
     if (!filamentsData || !printersData) return (<><svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -181,8 +170,6 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
                 </div>
             </form>
         </>
-
-
     )
 }
 

@@ -1,15 +1,9 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
-
-import { mutate } from 'swr'
-
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-
-import { fetcher, dirtyFetcher } from '../../lib/fetchers'
-import { notifySuccess, notifyError } from '../../lib/toasts';
-
+import { dirtyFetcher } from '../../lib/fetchers'
+import { notifySuccess } from '../../lib/toasts';
 
 const PrinterForm = ({ user, filamentsData }) => {
     const router = useRouter();
@@ -37,14 +31,12 @@ const PrinterForm = ({ user, filamentsData }) => {
         const newFormData = { ...addFormData };
         newFormData[fieldName] = fieldValue;
 
-
         setAddFormData(newFormData);
     };
 
     const handleAddFormSubmit = async (event) => {
         event.preventDefault();
         let newPrinter;
-
 
         if (user) {
             let filament = filamentsData.find(filament => filament._id === addFormData.currentFilament)
@@ -64,14 +56,10 @@ const PrinterForm = ({ user, filamentsData }) => {
             };
         }
 
-
-
         var res = await dirtyFetcher("/api/printer/createPrinter", {
             method: "post",
             body: JSON.stringify(newPrinter)
-        });
-
-        // const data = await res.json()
+        }); 
 
         if (res.status === 200) {
             event.target.reset()
@@ -80,11 +68,7 @@ const PrinterForm = ({ user, filamentsData }) => {
                 pathname: '/printers',
             })
         }
-
     };
-
-
-
 
     if (!filamentsData) return (<><svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

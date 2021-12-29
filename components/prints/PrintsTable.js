@@ -5,13 +5,10 @@ import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/
 import { fetcher, dirtyFetcher } from '../../lib/fetchers'
 import { notifySuccess, notifyError } from '../../lib/toasts';
 
-
 export default function PrintsTable({ user }) {
-
     const { data: printsData, error: printsError } = useSWR(`/api/print/getPrints?userId=${user.sub}`, fetcher)
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
     const { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
-
     const [editPrintData, setEditFormData] = useState({
         name: "",
         printer: "",
@@ -32,22 +29,16 @@ export default function PrintsTable({ user }) {
     
     const [editPrintId, SetEditPrintId] = useState(null);
 
-
     const handleEditFormChange = (event) => {
         event.preventDefault();
         const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value;
-
         const newFormData = { ...editPrintData };
-
         newFormData[fieldName] = fieldValue;
-
         setEditFormData(newFormData);
     };
 
     const handleEditFormSubmit = async () => {
-
-
         const res = await dirtyFetcher("/api/print/updatePrint?id=" + editPrintId, {
             method: "put",
             body: JSON.stringify(editPrintData)
@@ -68,7 +59,6 @@ export default function PrintsTable({ user }) {
     const handleEditClick = (event, print) => {
         event.preventDefault();
         SetEditPrintId(print._id);
-
 
         const formValues = {
             name: print.name,
@@ -110,7 +100,6 @@ export default function PrintsTable({ user }) {
         }
 
         mutate(`/api/print/getPrints?userId=${user.sub}`);
-
     };
 
     if (printsError || filamentsError || printersError) return <div>{printsError.message || filamentsError.message}</div>
@@ -155,7 +144,6 @@ export default function PrintsTable({ user }) {
             </tbody>
         </table>
     )
-
 
     return (
         <>

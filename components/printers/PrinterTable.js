@@ -6,9 +6,6 @@ import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/
 import { fetcher, dirtyFetcher } from '../../lib/fetchers'
 import { notifySuccess, notifyError } from '../../lib/toasts';
 
-
-
-
 const PrinterTable = ({ user, filamentsData }) => {
     var { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
 
@@ -27,11 +24,6 @@ const PrinterTable = ({ user, filamentsData }) => {
         notes: "",
         userId: ""
     });
-
-
-    // this is to see the skeleton table 
-    //printersData=false
-
 
     const handleEditClick = (event, printer) => {
         event.preventDefault();
@@ -91,9 +83,7 @@ const PrinterTable = ({ user, filamentsData }) => {
             notifySuccess(`Printer deleted! 🎉`)
         }
 
-
         mutate(`/api/printer/getPrinters?userId=${user.sub}`);
-
     };
 
     const handleCancelClick = () => {
