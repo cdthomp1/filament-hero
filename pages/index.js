@@ -1,6 +1,3 @@
-import Head from 'next/head'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDumpster } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
   return (
@@ -17,10 +14,17 @@ export default function Home() {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center" id="learnMore">
-        <h2 className="2xl:text-4xl xl:text-4xl lg:text-4xl md:text-4xl sm:text-3xl text-5xl mb-3 mt-3">Keep Track of Filament</h2>
-        <h2 className="2xl:text-4xl xl:text-4xl lg:text-4xl md:text-4xl sm:text-3xl text-5xl mb-3 mt-3">The Easy Way</h2>
+        <h2 className="2xl:text-4xl xl:text-4xl lg:text-4xl md:text-4xl sm:text-3xl text-5xl mb-3 mt-3">Add Your Filaments</h2>
         <div>
-      
+          <p>Add your filaments with the form. Keep track of them on the handy table. Make a mistake? Edit the filament directly in the table!</p>
+        </div>
+        <h2 className="2xl:text-4xl xl:text-4xl lg:text-4xl md:text-4xl sm:text-3xl text-5xl mb-3 mt-3">Add Your Printers</h2>
+        <div>
+          <p>Add your printers with the form. Keep track of which printer is loaded with which filament</p>
+        </div>
+        <h2 className="2xl:text-4xl xl:text-4xl lg:text-4xl md:text-4xl sm:text-3xl text-5xl mb-3 mt-3">Add Your Prints</h2>
+        <div>
+          <p>Add your prints with the form. When you add a print, the weight of will be deducted from the associated filament. The printer status will also be updated appropietly.</p>
         </div>
       </div>
     </>
