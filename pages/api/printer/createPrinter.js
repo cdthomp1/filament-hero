@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const Print = require('../models/Print');
 const Printer = require('../models/Printers');
+import { MongoClient } from "mongodb";
+
 
 const connectDB = async () => {
     try {
@@ -9,20 +10,22 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useCreateIndex: true
         })
-
     } catch (err) {
         process.exit(1);
     }
 }
 
 export default async (req, res) => {
+    try {
+        await connectDB();
+        const newPrinter = new Printer(JSON.parse(req.body))
 
-    await connectDB();
-    const newPrint = new Print(JSON.parse(req.body))
+        const createdPrinter = await newPrinter.save()
 
 
-    const createdPrint = await newPrint.save()
+        res.status(200).json(createdPrinter)
 
-
-    res.status(200).json(createdPrint)
+    } catch (error) {
+        res.status(500).json({ message: error.message, stack: error.stack })
+    }
 }

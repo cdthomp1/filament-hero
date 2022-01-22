@@ -2,140 +2,80 @@ import React, { Fragment, useEffect, useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
-import PrintForm from './PrintForm'
-
-
-const fetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
-    return data
-}
+import { fetcher, dirtyFetcher } from '../../lib/fetchers'
+import { notifySuccess, notifyError } from '../../lib/toasts';
 
 export default function PrintsTable({ user }) {
     const { data: printsData, error: printsError } = useSWR(`/api/print/getPrints?userId=${user.sub}`, fetcher)
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
-
-
-    const [addFormData, setAddFormData] = useState({
-        name: "",
-        description: "",
-        filamentId: "",
-        filamentName: "",
-        duration: 0,
-        weight: 0,
-        userId: ""
-    });
-
+    const { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
     const [editPrintData, setEditFormData] = useState({
         name: "",
-        description: "",
+        printer: "",
+        stlUrl: "",
+        estPrintTime: "",
+        actPrintTime: "",
         filamentId: "",
-        filamentName: "",
-        duration: 0,
+        notes: "",
+        status: "",
+        partId: "",
+        settingsId: "",
+        nozelSize: "",
+        filamentLength: 0,
         weight: 0,
+        date: "",
         userId: ""
     });
+    
     const [editPrintId, SetEditPrintId] = useState(null);
-
-    const handleAddFormChange = (event) => {
-        event.preventDefault();
-
-        const fieldName = event.target.getAttribute("name");
-        const fieldValue = event.target.value;
-
-        const newFormData = { ...addFormData };
-        newFormData[fieldName] = fieldValue;
-
-
-        setAddFormData(newFormData);
-    };
 
     const handleEditFormChange = (event) => {
         event.preventDefault();
         const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value;
-
         const newFormData = { ...editPrintData };
-
         newFormData[fieldName] = fieldValue;
-
         setEditFormData(newFormData);
     };
 
-    const handleAddFormSubmit = async (event) => {
-        event.preventDefault();
-        let newPrint;
-
-        if (user) {
-            let filament = filamentsData.find(filament => filament._id === addFormData.filament)
-            newPrint = {
-                name: addFormData.name,
-                description: addFormData.description,
-                filamentId: addFormData.filament,
-                filamentName: `${filament.type} ${filament.color} `,
-                duration: addFormData.duration,
-                weight: addFormData.weight,
-                userId: user.sub
-            };
-        }
-
-        var printFilament = await fetcher("/api/filament/getFilament?id=" + newPrint.filamentId)
-        var updatedFilament = {
-            type: printFilament.type,
-            color: printFilament.color,
-            length: printFilament.length,
-            diameter: printFilament.diameter,
-            weight: printFilament.weight - newPrint.weight,
-            userId: printFilament.userId
-        }
-
-        await fetcher("/api/print/addPrint", {
-            method: "post",
-            body: JSON.stringify(newPrint)
-        });
-
-        await fetcher("/api/filament/updateFilament?id=" + printFilament._id, {
-            method: "put",
-            body: JSON.stringify(updatedFilament)
-        });
-
-        mutate(`/api/print/getPrints?userId=${user.sub}`);
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-
-    };
-
     const handleEditFormSubmit = async () => {
-        await fetcher("/api/print/updatePrint?id=" + editPrintId, {
+        const res = await dirtyFetcher("/api/print/updatePrint?id=" + editPrintId, {
             method: "put",
             body: JSON.stringify(editPrintData)
         });
+
+        if (res.status === 200) {
+            notifySuccess(`${editPrintData.name} is updated! 🎉`)
+        }else if (res.status === 404 ) {
+            notifyError(`Print could not be found 😩`)
+        } else if (res.status === 500) {
+            notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
+        }
+
         mutate(`/api/print/getPrints?userId=${user.sub}`);
         SetEditPrintId(null);
     };
-
-    const handleFormUpdate = (event) => {
-        console.log(event)
-        mutate(`/api/print/getPrints?userId=${user.sub}`);
-
-    }
 
     const handleEditClick = (event, print) => {
         event.preventDefault();
         SetEditPrintId(print._id);
 
-        console.log(print)
-
         const formValues = {
             name: print.name,
-            description: print.description,
-            filamentId: addFormData.filament,
-            filamentName: filamentsData.find(filament => filament._id === addFormData.filament),
-            duration: print.duration,
+            printer: print.printer,
+            stlUrl: print.stlUrl,
+            estPrintTime: print.estPrintTime,
+            actPrintTime: print.actPrintTime,
+            filamentId: print.filamentId,
+            notes: print.notes,
+            status: print.status,
+            partId: print.partId,
+            settingsId: print.settingsId,
+            nozelSize: print.nozelSize,
+            filamentLength: print.filamentLength,
             weight: print.weight,
+            date: print.date,
+            userId: user.sub
         };
 
         setEditFormData(formValues);
@@ -146,18 +86,24 @@ export default function PrintsTable({ user }) {
     };
 
     const handleDeleteClick = async (printId) => {
-        const res = await fetcher("/api/print/deletePrint", {
+        const res = await dirtyFetcher("/api/print/deletePrint", {
             method: "delete",
             body: JSON.stringify({ id: printId })
         });
 
+        if (res.status === 200) {
+            notifySuccess(`Print deleted! 🎉`)
+        } else if (res.status === 404 ) {
+            notifyError(`Print could not be found 😩`)
+        } else if (res.status === 500) {
+            notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
+        }
 
         mutate(`/api/print/getPrints?userId=${user.sub}`);
-
     };
 
-    if (printsError || filamentsError) return <div>{printsError.message || filamentsError.message}</div>
-    if (!printsData || !filamentsData) return (
+    if (printsError || filamentsError || printersError) return <div>{printsError.message || filamentsError.message}</div>
+    if (!printsData || !filamentsData || !printersData) return (
         <table className="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
             <thead>
                 <tr>
@@ -199,107 +145,160 @@ export default function PrintsTable({ user }) {
         </table>
     )
 
-
     return (
-        <div className="flex flex-col w-7/12">
-            {printsData.length > 0 ?
-                <>
-
-                    <div className="grid grid-cols-6 gap-x-1">
-                        <div className="text-blue-700 lg:text-2xl">Name</div>
-                        <div className="text-blue-700 lg:text-2xl">Description</div>
-                        <div className="text-blue-700 lg:text-2xl">Filament</div>
-                        <div className="text-blue-700 lg:text-2xl">Duration</div>
-                        <div className="text-blue-700 lg:text-2xl ">Weight</div>
-                    </div>
-                    {printsData.map((print, index) => {
-                        return (
-                            <Fragment key={index}> {editPrintId !== print._id ? (
-                                <div className='grid grid-cols-6 gap-x-1 w-full border border-b-1'>
-                                    <div className="p-1">{print.name}</div>
-                                    <div className="p-1">{print.description}</div>
-                                    <div className="p-1">{print.filamentName}</div>
-                                    <div className="p-1">{print.duration}</div>
-                                    <div className="p-1">{print.weight}</div>
-                                    <div className="p-1"><FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, print)}
-                                        icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(print._id)} icon={faDumpster} /></div>
-                                </div>) :
-                                (<div key={index} className="grid grid-cols-6 gap-x-1">
-                                    <div className="text-center">
-                                        <input
-                                            className="border"
-                                            type="text"
-                                            required="required"
-                                            placeholder="Name"
-                                            name="name"
-                                            value={editPrintData.name}
-                                            onChange={handleEditFormChange}
-                                        ></input>
-                                    </div>
-                                    <div className="text-center">
-                                        <input
-                                            className="border"
-                                            type="text"
-                                            required="required"
-                                            placeholder="Description"
-                                            name="description"
-                                            value={editPrintData.description}
-                                            onChange={handleEditFormChange}
-                                        ></input>
-                                    </div>
-                                    <div className="text-center">
-                                        <select
-                                            className="border"
-                                            required="required"
-                                            name="filament"
-                                            value={filamentsData[0]._id}
-                                            onChange={handleEditFormChange}
-                                        >
-                                            {filamentsData.map((filament, index) => {
-                                                //console.log("HELLO")
-                                                return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
-                                            })}
-                                        </select>
-                                    </div>
-                                    <div className="text-center">
-                                        <input
-                                            className="border"
-                                            type="number"
-                                            required="required"
-                                            placeholder="Duration"
-                                            name="duration"
-                                            value={editPrintData.duration}
-                                            onChange={handleEditFormChange}
-                                        ></input>
-                                    </div>
-                                    <div className="text-center">
-                                        <input
-                                            className="border"
-                                            type="number"
-                                            required="required"
-                                            placeholder="Weight"
-                                            name="weight"
-                                            value={editPrintData.weight}
-                                            onChange={handleEditFormChange}
-                                        ></input>
-                                    </div>
-                                    <div className="text-center">
-                                        <button
-                                            onClick={handleEditFormSubmit}
-                                        ><FontAwesomeIcon className="m-1 cursor-pointer" icon={faSave} /></button>
-                                        <button type="button" onClick={handleCancelClick}>
-                                            <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
-                                        </button>
-                                    </div>
-                                </div>)}
-
-                            </Fragment>)
-                    })}
-                    <div className="mt-4"><PrintForm  user={user} onFormAdd={handleFormUpdate} filamentsData={filamentsData} /></div>
-                </>
-                :
-                <><p className="m-4">Add a Print!</p><PrintForm user={user} onFormAdd={handleFormUpdate} filamentsData={filamentsData} /></>}
-
-        </div>
+        <>
+            <div className="w-11/12 m-auto overflow-x-auto">
+                <table className="table-fixed">
+                    <thead>
+                        <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th className="py-3 px-6 text-center">Name</th>
+                            <th className="py-3 px-6 text-center">Printer</th>
+                            <th className="py-3 px-6 text-center">EST. Print<br />Time</th>
+                            <th className="py-3 px-6 text-center">ACT. Print Time</th>
+                            <th className="py-3 px-6 text-center">Status</th>
+                            <th className="py-3 px-6 text-center">Filament</th>
+                            {/* <th className="py-3 px-6 text-center">Settings</th> */}
+                            {/* <th className="py-3 px-6 text-center">Part</th> */}
+                            {/* <th className="py-3 px-6 text-center">Nozzle Size</th> */}
+                            <th className="py-3 px-6 text-center">Weight</th>
+                            <th className="py-3 px-6 text-center">Date</th>
+                            <th className="py-3 px-6 text-center w-1/2">Notes</th>
+                            <th className="py-3 px-6 text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-600 text-sm font-light">
+                        {printsData.map((print, index) => {
+                            var printDate = new Date(print.date);
+                            return (
+                                <Fragment key={index}> {editPrintId !== print._id ? (
+                                    <tr className="border-b border-gray-200 hover:bg-gray-100">
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{print.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{print.printer.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{print.estPrintTime}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{print.actPrintTime}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            {print.status === 'Printing' ? (<span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">{print.status}</span>) : print.status === 'Done' ? (<span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{print.status}</span>) : print.status === 'Failed' ? (<span className="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">{print.status}</span>) : print.status === 'Canceled' ? (<span className="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">{print.status}</span>) : (<span className="bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-xs">{print.status}</span>)}
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{`${print.filamentId.type} ${print.filamentId.color}`}</span>
+                                            </div>
+                                        </td>
+                                        {/* <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <div className="flex item-center justify-center">
+                                                    <span className="font-medium">{print.settingsId}</span>
+                                                </div>
+                                            </td> */}
+                                        {/* <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <div className="flex item-center justify-center">
+                                                    <span className="font-medium">{print.partId}</span>
+                                                </div>
+                                            </td> */}
+                                        {/* <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{print.nozelSize}</span>
+                                            </div>
+                                        </td> */}
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{print.weight}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center whitespace-nowrap">
+                                            <div className="flex item-center justify-center">
+                                                <span className="font-medium">{printDate.toDateString()}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center ">
+                                            <div className="flex items-center justify-center">
+                                                {print.notes}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-6 text-center">
+                                            <div className="flex item-center justify-center">
+                                                <FontAwesomeIcon className="m-1 cursor-pointer" onClick={(event) => handleEditClick(event, print)}
+                                                    icon={faEdit} /><FontAwesomeIcon className="m-1" onClick={() => handleDeleteClick(print._id)} icon={faDumpster} />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    <Fragment key={index}>
+                                        <tr className="border-b border-gray-200 hover:bg-gray-100">
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <input type="text" name="name" className="border w-28" value={editPrintData.name} onChange={handleEditFormChange} />
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <select type="text" name="printer" className="border" onChange={handleEditFormChange} >
+                                                    <option value="">Printer</option>
+                                                    {printersData.map((printer, index) => {
+                                                        return (<option key={index} value={printer._id}>{`${printer.name}`}</option>)
+                                                    })}
+                                                </select>
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <input type="text" name="estPrintTime" className="border w-28" value={editPrintData.estPrintTime} onChange={handleEditFormChange} />
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <input type="text" name="actPrintTime" className="border w-28" value={editPrintData.actPrintTime} onChange={handleEditFormChange} />
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <select type="text" name="status" className="border" value={editPrintData.status} onChange={handleEditFormChange}>
+                                                    <option value="">Status</option>
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Printing">Printing</option>
+                                                    <option value="Done">Done</option>
+                                                    <option value="Failed">Failed</option>
+                                                    <option value="Canceled">Canceled</option>
+                                                </select>
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <select type="text" name="currentFilament" className="border" onChange={handleEditFormChange} >
+                                                    <option value="">Filament</option>
+                                                    {filamentsData.map((filament, index) => {
+                                                        return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                                                    })}
+                                                </select>
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <input type="text" name="weight" className="border w-28" value={editPrintData.weight} onChange={handleEditFormChange} />
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <input type="date" name="date" className="border w-36" value={editPrintData.date} onChange={handleEditFormChange} />
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <textarea name="notes" name="notes" type="text" className="border w-72" rows="2" cols="500" onChange={handleEditFormChange} >{editPrintData.notes}</textarea>
+                                            </td>
+                                            <td className="py-3 px-6 text-center whitespace-nowrap">
+                                                <button
+                                                    onClick={handleEditFormSubmit}
+                                                ><FontAwesomeIcon className="m-1 cursor-pointer" icon={faSave} /></button>
+                                                <button type="button" onClick={handleCancelClick}>
+                                                    <FontAwesomeIcon className="m-1 cursor-pointer" icon={faWindowClose} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </Fragment>)}
+                                </Fragment>)
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </>
     )
 }

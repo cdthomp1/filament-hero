@@ -5,9 +5,9 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 
 const navigation = [
     { name: 'Home', href: '/', current: false },
-    { name: 'Dashboard', href: '/dashboard', current: false },
+    { name: 'Printers', href: '/printers', current: false },
+    { name: 'Filaments', href: '/filaments', current: false },
     { name: 'Prints', href: '/prints', current: false },
-
 ]
 
 function classNames(...classes) {
@@ -17,7 +17,7 @@ function classNames(...classes) {
 export default function Navigation() {
     const { user, error, isLoading } = useUser();
      return (
-        <Disclosure as="nav" className="bg-regal-blue">
+        <Disclosure as="nav" className="bg-nav-gray">
             {({ open }) => (
                 <>
                     <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">

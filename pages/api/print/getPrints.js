@@ -8,16 +8,14 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useCreateIndex: true
         })
-        console.log(`MongoDB Connect: ${conn.connection.host}`)
 
     } catch (err) {
-        console.error(`Error: ${err.message}`);
         process.exit(1);
     }
 }
 
 const getPrints = async (id) => {
-    const prints = await Print.find({ userId: id })
+    const prints = await Print.find({ userId: id }).populate('printer').populate('filamentId')
     return prints;
 }
 

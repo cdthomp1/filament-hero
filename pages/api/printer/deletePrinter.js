@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Print = require('../models/Print')
+const Printer = require('../models/Printers')
 
 const connectDB = async () => {
     try {
@@ -15,15 +15,17 @@ const connectDB = async () => {
 }
 
 export default async (req, res) => {
+
+
     const { id } = JSON.parse(req.body)
 
-    const foundPrint = await Print.findById(id)
+    const foundPrinter = await Printer.findById(id)
 
-    if (foundPrint) {
-        await foundPrint.remove()
-        res.status(200).json({ message: "Print Successfully Deleted 🎉" })
+    if (foundPrinter) {
+        await foundPrinter.remove()
+        res.status(200).json({ message: "Printer Successfully Deleted 🎉" })
     } else {
-        res.status(404).json({ message: "Print not found 😩" })
+        res.status(404).json({ message: "Printer not found 😩" })
     }
 
 

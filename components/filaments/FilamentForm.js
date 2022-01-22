@@ -1,40 +1,25 @@
 import React, { useState } from 'react'
-import useSWR, { mutate } from 'swr'
+import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDumpster, faEdit, faSave, faWindowClose, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { dirtyFetcher } from '../../lib/fetchers'
+import { notifySuccess, notifyError } from '../../lib/toasts';
 
-const fetcher = async (...args) => {
-    const res = await fetch(...args)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
-    }
-    return data
-}
-
-
-export default function FilamentForm({ user, onFormAdd }) {
-
-    console.log(user)
-
+export default function FilamentForm({ user }) {
+    const router = useRouter();
     const [addFormData, setAddFormData] = useState({
+        brand: "",
         type: "",
         color: "",
-        weight: 0,
+        length: 0,
         diameter: 0,
-        weight: 0
-    });
-
-    const [editFilamentData, setEditFormData] = useState({
-        type: "",
-        color: "",
         weight: 0,
-        diameter: 0,
-        weight: 0
+        printingNozelTemp: 0,
+        printingBedTemp: 0,
+        maxOverHangDistance: 0,
+        maxOverHangAngle: 0,
+        notes: ''
     });
-
-    const [editFilamentId, setEditFilamentId] = useState(null);
 
     const handleAddFormChange = (event) => {
         event.preventDefault();
@@ -48,130 +33,85 @@ export default function FilamentForm({ user, onFormAdd }) {
         setAddFormData(newFormData);
     };
 
-    const handleEditFormChange = (event) => {
-        event.preventDefault();
-        const fieldName = event.target.getAttribute("name");
-        const fieldValue = event.target.value;
-        const newFormData = { ...editFilamentData };
-        newFormData[fieldName] = fieldValue;
-
-        setEditFormData(newFormData);
-    };
-
     const handleAddFormSubmit = async (event) => {
         event.preventDefault();
         let newFilament
         if (user) {
             newFilament = {
+                brand: addFormData.brand,
                 type: addFormData.type,
                 color: addFormData.color,
-                weight: addFormData.weight,
+                length: addFormData.length,
                 diameter: addFormData.diameter,
-                length: 0,
+                weight: addFormData.weight,
+                printingNozelTemp: addFormData.printingNozelTemp,
+                printingBedTemp: addFormData.printingBedTemp,
+                maxOverHangDistance: addFormData.maxOverHangDistance,
+                maxOverHangAngle: addFormData.maxOverHangAngle,
+                notes: addFormData.notes,
                 userId: user.sub
             };
         }
-
-
-        //console.log(newFilament)
-
-        await fetcher("/api/filament/addFilament", {
+        var res = await dirtyFetcher("/api/filament/createFilament", {
             method: "post",
             body: JSON.stringify(newFilament)
         });
 
-        onFormAdd(event)
+        if (res.status === 200) {
+            event.target.reset()
+            notifySuccess('Filament Created! 🎉');
+            router.push({
+                pathname: '/filaments',
+            })
 
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-
-        for (var i = 0; i < event.target.elements.length; i++) {
-            event.target.elements[i].value = ''
+        } else {
+            notifyError('Something went wrong on the server! 😩')
         }
 
     };
-
-    const handleEditFormSubmit = async () => {
-        await fetcher("/api/filament/updateFilament?id=" + editFilamentId, {
-            method: "put",
-            body: JSON.stringify(editFilamentData)
-        });
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-        setEditFilamentId(null);
-    };
-
-    const handleEditClick = (event, filament) => {
-        event.preventDefault();
-        setEditFilamentId(filament._id);
-
-        const formValues = {
-            type: filament.type,
-            color: filament.color,
-            length: filament.length,
-            diameter: filament.diameter,
-            weight: filament.weight,
-        };
-
-        setEditFormData(formValues);
-    };
-
-    const handleCancelClick = () => {
-        setEditFilamentId(null);
-    };
-
-    const handleDeleteClick = async (filamentId) => {
-        const res = await fetcher("/api/filament/deleteFilament", {
-            method: "delete",
-            body: JSON.stringify({ id: filamentId })
-        });
-
-
-        mutate(`/api/filament/getFilaments?userId=${user.sub}`);
-
-    };
-
     return (
-        <>
-            <form className="grid grid-cols-4 gap-1" onSubmit={handleAddFormSubmit}>
-                <input
-                    className="border"
-                    type="text"
-                    name="type"
-                    required="required"
-                    placeholder="Type"
-                    onChange={handleAddFormChange}
-                />
-
-                <input
-                    className="border"
-                    type="text"
-                    name="color"
-                    required="required"
-                    placeholder="Color"
-                    onChange={handleAddFormChange}
-                />
-                <input
-                    className="border"
-                    type="number"
-                    name="weight"
-                    step="0.01"
-                    required="required"
-                    placeholder="Weight (Grams)"
-                    onChange={handleAddFormChange}
-                />
-                <input
-                    className="border"
-                    type="number"
-                    name="diameter"
-                    step="0.01"
-                    required="required"
-                    placeholder="Diameter"
-                    onChange={handleAddFormChange}
-                />
-
-                <button className="bg-gray-200 dark:bg-green-400 dark:hover:bg-gray-200 dark:text-gray-800 rounded p-1 hover:bg-green-400 col-span-4" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer w-12" icon={faPlus} /> Filament</button>
+        <div className="border-b border-gray-200 flex flex-col justify-center">
+            <form onSubmit={handleAddFormSubmit} className="text-center">
+                <div className="py-3 px-6">
+                    <label htmlFor="brand" className="text-lg">Brand</label><br />
+                    <input type="text" name="brand" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="type" className="text-lg">Type</label><br />
+                    <input type="text" name="type" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="color" className="text-lg">Color</label><br />
+                    <input type="text" name="color" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="weight" className="text-lg">Weight</label><br />
+                    <input type="text" name="weight" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="printingNozelTemp" className="text-lg">Printing Nozel Temp</label><br />
+                    <input type="text" name="printingNozelTemp" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="printingBedTemp" className="text-lg">Printing Bed Temp</label><br />
+                    <input type="text" name="printingBedTemp" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="maxOverHangDistance" className="text-lg">Max Overhang Distance</label><br />
+                    <input type="text" name="maxOverHangDistance" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="maxOverHangAngle" className="text-lg">Max Overhang Angle</label><br />
+                    <input type="text" name="maxOverHangAngle" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="notes" className="text-lg">Notes</label><br />
+                    <textarea name="notes" name="notes" type="text" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <button className="p-2 pl-5 pr-5 bg-transparent border-2 border-purple-500 text-purple-500 text-lg rounded-lg transition-colors duration-300 transform hover:bg-purple-500 hover:text-gray-100 focus:border-4 focus:border-purple-300" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Filament</button>
+                </div>
             </form>
-        </>
+        </div>
     )
 }
-
-
