@@ -12,7 +12,7 @@ export default withPageAuthRequired(function addPrint({ user }) {
     return (
         <>
             <div className="md:grid grid-flow-col grid-cols-3 gap-4">
-                <h1 className="text-4xl text-center p-6 col-start-2">Add a Printer</h1>
+                <h1 className="text-4xl text-center p-6 col-start-2">Add a Print</h1>
             </div>
             <PrintForm user={user} filamentsData={filamentsData} printersData={printersData} />
         </>
