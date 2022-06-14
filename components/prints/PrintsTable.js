@@ -26,7 +26,7 @@ export default function PrintsTable({ user }) {
         date: "",
         userId: ""
     });
-    
+
     const [editPrintId, SetEditPrintId] = useState(null);
 
     const handleEditFormChange = (event) => {
@@ -46,7 +46,7 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`${editPrintData.name} is updated! 🎉`)
-        }else if (res.status === 404 ) {
+        } else if (res.status === 404) {
             notifyError(`Print could not be found 😩`)
         } else if (res.status === 500) {
             notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
@@ -93,7 +93,7 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`Print deleted! 🎉`)
-        } else if (res.status === 404 ) {
+        } else if (res.status === 404) {
             notifyError(`Print could not be found 😩`)
         } else if (res.status === 500) {
             notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
@@ -169,6 +169,7 @@ export default function PrintsTable({ user }) {
                     <tbody className="text-gray-600 text-sm font-light">
                         {printsData.map((print, index) => {
                             var printDate = new Date(print.date);
+                            console.log('print', print)
                             return (
                                 <Fragment key={index}> {editPrintId !== print._id ? (
                                     <tr className="border-b border-gray-200 hover:bg-gray-100">

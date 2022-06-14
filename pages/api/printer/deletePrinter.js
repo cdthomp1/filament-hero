@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/* const mongoose = require('mongoose');
 const Printer = require('../models/Printers')
 
 const connectDB = async () => {
@@ -29,4 +29,4 @@ export default async (req, res) => {
     }
 
 
-}
+} */

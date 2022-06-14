@@ -49,7 +49,8 @@ export default function FilamentForm({ user }) {
                 maxOverHangDistance: addFormData.maxOverHangDistance,
                 maxOverHangAngle: addFormData.maxOverHangAngle,
                 notes: addFormData.notes,
-                userId: user.sub
+                userId: user.sub,
+                testProp: "THIS IS A TEST"
             };
         }
         var res = await dirtyFetcher("/api/filament/createFilament", {

@@ -4,8 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { fetcher, dirtyFetcher } from '../../lib/fetchers'
 import { notifySuccess, notifyError } from '../../lib/toasts';
+import { useRouter } from 'next/router'
+
 
 const PrintForm = ({ user, filamentsData, printersData }) => {
+    const router = useRouter();
+
     const [addFormData, setAddFormData] = useState({
         name: "",
         printer: "",
@@ -79,10 +83,15 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
 
         var printFilament = await fetcher("/api/filament/getFilament?id=" + newPrint.filamentId)
         var updatedFilament = {
+            brand: printFilament.brand,
             type: printFilament.type,
             color: printFilament.color,
             length: printFilament.length,
             diameter: printFilament.diameter,
+            printingNozelTemp: printFilament.printingNozelTemp,
+            printingBedTemp: printFilament.printingBedTemp,
+            maxOverHangDistance: printFilament.maxOverHangDistance,
+            maxOverHangAngle: printFilament.maxOverHangAngle,
             weight: printFilament.weight - newPrint.weight,
             userId: printFilament.userId
         }
@@ -99,7 +108,9 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
 
         if (res.status === 200) {
             notifySuccess('Print Created! 🎉');
-            event.target.reset()
+            router.push({
+                pathname: '/prints',
+            })
         }
     };
 
@@ -137,7 +148,7 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
                     <select type="text" name="filamentId" className="border w-72" onChange={handleAddFormChange} >
                         <option value="">Filament</option>
                         {filamentsData.map((filament, index) => {
-                            return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                            return (<option key={index} value={filament._id}>{`${filament.brand} ${filament.type} ${filament.color}`}</option>)
                         })}
                     </select>
                 </div>
@@ -158,7 +169,7 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
                 </div>
                 <div className="py-3 px-6">
                     <label htmlFor="notes" className="text-lg">Notes</label><br />
-                    <textarea name="notes" name="notes" type="text" className="border w-72" onChange={handleAddFormChange} />
+                    <textarea name="notes" type="text" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
                     <label htmlFor="make" className="text-lg">STL URL</label><br />
@@ -166,7 +177,7 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
                 </div>
 
                 <div className="py-3 px-6">
-                    <button className="p-2 pl-5 pr-5 bg-transparent border-2 border-purple-500 text-purple-500 text-lg rounded-lg transition-colors duration-300 transform hover:bg-purple-500 hover:text-gray-100 focus:border-4 focus:border-purple-300" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Printer</button>
+                    <button className="p-2 pl-5 pr-5 bg-transparent border-2 border-purple-500 text-purple-500 text-lg rounded-lg transition-colors duration-300 transform hover:bg-purple-500 hover:text-gray-100 focus:border-4 focus:border-purple-300" type="submit"><FontAwesomeIcon className="mt-1 cursor-pointer" icon={faPlus} /> Print</button>
                 </div>
             </form>
         </>

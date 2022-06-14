@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/* const mongoose = require('mongoose');
 const Printer = require('../models/Printers');
 import { MongoClient } from "mongodb";
 
@@ -28,4 +28,4 @@ export default async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message, stack: error.stack })
     }
-}
+} */

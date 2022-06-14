@@ -68,7 +68,7 @@ export default withPageAuthRequired(function print({ user }) {
     if (printersData && filamentsData && warningMessage === '') {
         return (
             <>
-                <div className="flex flex-col items-center h-screen mb-auto">
+                <div className="flex flex-col items-center">
                     <h1 className="text-4xl text-center p-6">Prints</h1>
                     <PrintsTable user={user} filamentsData={filamentsData} printersData={printersData} />
                     <div className="m-6">
