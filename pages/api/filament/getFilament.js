@@ -23,7 +23,7 @@ export default async (req, res) => {
         var id = req.query.id
         const userData = await db.collection('users').findOne({ 'filaments.id': ObjectId(id) })
 
-        let filament = userData.filaments.find(f => f.id.toString() === ObjectId(id).toString())
+        let filament = userData.filaments.find(f => f.id.toString() === id)
 
         res.status(200).json(filament);
 
