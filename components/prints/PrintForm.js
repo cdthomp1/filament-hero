@@ -79,13 +79,10 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
 
         var printFilament = await fetcher("/api/filament/getFilament?id=" + newPrint.filamentId)
         var updatedFilament = {
-            type: printFilament.type,
-            color: printFilament.color,
-            length: printFilament.length,
-            diameter: printFilament.diameter,
+            ...printFilament,
             weight: printFilament.weight - newPrint.weight,
-            userId: printFilament.userId
         }
+
 
         var res = await dirtyFetcher("/api/print/addPrint", {
             method: "post",

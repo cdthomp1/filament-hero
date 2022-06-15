@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }) {
       <Navigation />
       <Toast />
       <Component {...pageProps} />
-      <Footer />
+      {/* <Footer /> */}
     </UserProvider>
   );
 }
