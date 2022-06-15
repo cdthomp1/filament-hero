@@ -63,7 +63,6 @@ export default async (req, res) => {
     );
 
     let currentUser = await db.collection('users').findOne({ "userId": userId })
-
     if (currentUser) {
         console.log(currentUser)
         let currentFilaments = currentUser.filaments
@@ -75,7 +74,6 @@ export default async (req, res) => {
         })
     } else {
         filaments.push(newFilament);
-
         await db.collection('users').insertOne({
             userId: userId,
             filaments,
