@@ -26,7 +26,7 @@ export default function PrintsTable({ user }) {
         date: "",
         userId: ""
     });
-    
+
     const [editPrintId, SetEditPrintId] = useState(null);
 
     const handleEditFormChange = (event) => {
@@ -46,7 +46,7 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`${editPrintData.name} is updated! 🎉`)
-        }else if (res.status === 404 ) {
+        } else if (res.status === 404) {
             notifyError(`Print could not be found 😩`)
         } else if (res.status === 500) {
             notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
@@ -93,7 +93,7 @@ export default function PrintsTable({ user }) {
 
         if (res.status === 200) {
             notifySuccess(`Print deleted! 🎉`)
-        } else if (res.status === 404 ) {
+        } else if (res.status === 404) {
             notifyError(`Print could not be found 😩`)
         } else if (res.status === 500) {
             notifyError('There is something wrong on our end 🤦🏼‍♂️ try again soon ')
@@ -148,7 +148,7 @@ export default function PrintsTable({ user }) {
     return (
         <>
             <div className="w-11/12 m-auto overflow-x-auto">
-                <table className="table-fixed">
+                <table className="table-auto">
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                             <th className="py-3 px-6 text-center">Name</th>
