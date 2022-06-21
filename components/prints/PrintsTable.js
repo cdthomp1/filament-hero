@@ -105,47 +105,45 @@ export default function PrintsTable({ user }) {
 
     if (printsError || filamentsError || printersError) return <div>{printsError.message || filamentsError.message}</div>
     if (!printsData || !filamentsData || !printersData) return (
-        <table className="animate-pulse shadow-lg border-collapse border w-9/12 table-fixed mb-4">
+        <table className="animate-pulse min-w-max w-full table-auto ">
             <thead>
-                <tr>
-                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
-                    <th className="bg-gray-500 border text-xl">&nbsp;</th>
+                <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
+                    <th className="py-3 px-6 text-center">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
-                <tr className="h-4 even:bg-gray-100 ">
-                    <td className="h-4">&nbsp;</td>
-                    <td className="h-4">&nbsp;</td>
-                    <td className="h-4">&nbsp;</td>
-                    <td className="h-4">&nbsp;</td>
-                    <td className="h-4">&nbsp;</td>
-                    <td className="h-4">&nbsp;</td>
+                <tr className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
                 </tr>
-                <tr className="h-4 even:bg-gray-100 ">
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
+                <tr className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
                 </tr>
-                <tr className="h-4 even:bg-gray-100 ">
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
-                    <td className="h-4 ">&nbsp;</td>
+                <tr className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
+                    <td className="py-3 px-6">&nbsp;</td>
                 </tr>
-
             </tbody>
         </table>
     )
-
     if (printsData || filamentsData || printersData) return (
         <>
             <div className="w-11/12 m-auto overflow-x-auto">
