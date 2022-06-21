@@ -9,9 +9,7 @@ export default function PrintsTable({ user }) {
     const { data: printsData, error: printsError } = useSWR(`/api/print/getPrints?userId=${user.sub}`, fetcher)
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
     const { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
-    if (printersData) {
-        console.log(printsData)
-    }
+
     const [editPrintData, setEditFormData] = useState({
         name: "",
         printer: "",
@@ -62,7 +60,7 @@ export default function PrintsTable({ user }) {
     const handleEditClick = (event, print) => {
         event.preventDefault();
         SetEditPrintId(print._id);
-
+        console.log('print', print)
         const formValues = {
             name: print.name,
             printer: print.printer,
@@ -80,7 +78,7 @@ export default function PrintsTable({ user }) {
             date: print.date,
             userId: user.sub
         };
-
+        console.log(formValues)
         setEditFormData(formValues);
     };
 

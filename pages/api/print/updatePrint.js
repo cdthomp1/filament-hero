@@ -25,9 +25,6 @@ export default async (req, res) => {
         const print = await Print.findById(id)
 
         if (print) {
-
-
-
             print.name = name
             print.printer = printer._id
             print.estPrintTime = estPrintTime
@@ -46,6 +43,7 @@ export default async (req, res) => {
         }
     }
     catch (error) {
+        console.log(error)
         res.status(500).json({ message: error })
 
     }

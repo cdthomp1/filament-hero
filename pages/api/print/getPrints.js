@@ -23,6 +23,5 @@ export default async (req, res) => {
     await connectDB();
     var id = req.query.userId
     const allPrints = await getPrints(id)
-    console.log(allPrints)
     res.status(200).json(allPrints)
 }
