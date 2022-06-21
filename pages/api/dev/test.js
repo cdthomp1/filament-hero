@@ -13,18 +13,22 @@ export default async (req, res) => {
                   printers: [],
                   prints: []
               }) */
-        try {
-            await db.collection('users').updateOne({ "_id": ObjectId('62a811e38cfb0f2e4a018741') }, {
-                $set: { 'pictures': [] },
-                $currentDate: { lastModified: true }
-            })
+        /*         try {
+                    await db.collection('filaments').updateOne({ "_id": ObjectId('62a811e38cfb0f2e4a018741') }, {
+                        $set: { 'pictures': [] },
+                        $currentDate: { lastModified: true }
+                    })
+        
+                } catch (error) {
+                    console.log(error)
+                } */
 
-        } catch (error) {
-            console.log(error)
-        }
 
-
-        let data = await db.collection('users').find().toArray()
+        let data = await db.collection('filaments').updateOne({ userId: 'google-oauth2|103405250983681452179', "_id": ObjectId("62999a12f524c4000970cb18") }, {
+            $set: {
+                testProp: "I AM A TEST"
+            }
+        }, { upsert: false })
 
         res.status(200).json(data);
 

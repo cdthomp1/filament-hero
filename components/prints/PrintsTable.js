@@ -9,6 +9,10 @@ export default function PrintsTable({ user }) {
     const { data: printsData, error: printsError } = useSWR(`/api/print/getPrints?userId=${user.sub}`, fetcher)
     const { data: filamentsData, error: filamentsError } = useSWR(`/api/filament/getFilaments?userId=${user.sub}`, fetcher)
     const { data: printersData, error: printersError } = useSWR(`/api/printer/getPrinters?userId=${user.sub}`, fetcher)
+
+    if (filamentsData) {
+        console.log(filamentsData)
+    }
     const [editPrintData, setEditFormData] = useState({
         name: "",
         printer: "",
@@ -198,7 +202,7 @@ export default function PrintsTable({ user }) {
                                         </td>
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
                                             <div className="flex item-center justify-center">
-                                                <span className="font-medium">{`${print.filamentId.type} ${print.filamentId.color}`}</span>
+                                                <span className="font-medium">{`${print.filament.brand} ${print.filament.type} ${print.filament.color}`}</span>
                                             </div>
                                         </td>
                                         {/* <td className="py-3 px-6 text-center whitespace-nowrap">
@@ -283,7 +287,7 @@ export default function PrintsTable({ user }) {
                                                 <input type="date" name="date" className="border w-36" value={editPrintData.date} onChange={handleEditFormChange} />
                                             </td>
                                             <td className="py-3 px-6 text-center whitespace-nowrap">
-                                                <textarea name="notes" name="notes" type="text" className="border w-72" rows="2" cols="500" onChange={handleEditFormChange} >{editPrintData.notes}</textarea>
+                                                <textarea name="notes" type="text" className="border w-72" rows="2" cols="500" onChange={handleEditFormChange} >{editPrintData.notes}</textarea>
                                             </td>
                                             <td className="py-3 px-6 text-center whitespace-nowrap">
                                                 <button
