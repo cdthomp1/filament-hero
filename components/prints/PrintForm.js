@@ -93,8 +93,8 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
             maxOverHangDistance: printFilament.maxOverHangDistance,
             maxOverHangAngle: printFilament.maxOverHangAngle,
             weight: printFilament.weight - newPrint.weight,
-            userId: printFilament.userId
         }
+
 
         var res = await dirtyFetcher("/api/print/addPrint", {
             method: "post",

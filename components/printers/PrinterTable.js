@@ -277,7 +277,7 @@ const PrinterTable = ({ user, filamentsData }) => {
 
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
-                                        <input name="notes" name="notes" type="text" className="border w-28" value={editPrinterData.notes} onChange={handleEditFormChange} />
+                                        <input name="notes" type="text" className="border w-28" value={editPrinterData.notes} onChange={handleEditFormChange} />
                                     </td>
                                     <td className="py-3 px-6 text-center whitespace-nowrap">
                                         <button
