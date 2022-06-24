@@ -16,7 +16,7 @@ function classNames(...classes) {
 
 export default function Navigation() {
     const { user, error, isLoading } = useUser();
-     return (
+    return (
         <Disclosure as="nav" className="bg-nav-gray">
             {({ open }) => (
                 <>
@@ -37,12 +37,12 @@ export default function Navigation() {
                                 <div className="flex-shrink-0 flex items-center">
                                     <img
                                         className="block lg:hidden h-12 w-auto"
-                                        src="./filament-hero-icon.svg"
+                                        src="/filament-hero-icon.svg"
                                         alt="Workflow"
                                     />
                                     <img
                                         className="hidden lg:block h-20 w-auto"
-                                        src="./filament-hero.svg"
+                                        src="/filament-hero.svg"
                                         alt="Workflow"
                                     />
                                 </div>

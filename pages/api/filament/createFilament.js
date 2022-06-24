@@ -5,9 +5,10 @@ export default async (req, res) => {
     const client = await clientPromise;
     const db = client.db("filamenttracker");
     const jsonBody = JSON.parse(req.body);
-    var userId = jsonBody.userId
 
-    let filaments = [];
+    var userId = jsonBody.userId
+    console.log('userId', userId)
+
     const newFilament = new Filament(
         new ObjectId(),
         jsonBody.brand,
@@ -22,31 +23,13 @@ export default async (req, res) => {
         jsonBody.purchaseDate,
         jsonBody.purchasePrice,
         jsonBody.purchaseLocation,
-        jsonBody.notes
+        jsonBody.notes,
+        jsonBody.userId
     );
 
-    let currentUser = await db.collection('users').findOne({ "userId": userId });
+    await db.collection('filaments').insertOne(newFilament);
 
-    if (currentUser) {
-        console.log(currentUser)
-        let currentFilaments = currentUser.filaments
-        currentFilaments.push(newFilament);
-
-        await db.collection('users').updateOne({ userId }, {
-            $set: { filaments: currentFilaments },
-            $currentDate: { lastModified: true }
-        })
-    } else {
-        filaments.push(newFilament);
-        await db.collection('users').insertOne({
-            userId: userId,
-            filaments,
-        })
-    }
-
-
-
-    let data = await db.collection('users').find().toArray()
+    let data = await db.collection('filaments').find({ 'userId': userId }).toArray();
 
     res.status(200).json(data);
 

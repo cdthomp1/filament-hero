@@ -6,13 +6,12 @@ export default async (req, res) => {
 
         const client = await clientPromise;
         const db = client.db("filamenttracker")
-        var id = req.query.id
+        var id = req.query.filamentId
         if (!id) {
-            res.status(404).json({ message: "No user ID provided 😩" })
+            res.status(404).json({ message: "No filament ID provided 😩" })
         }
-        const userData = await db.collection('users').findOne({ 'filaments.id': ObjectId(id) })
+        const filament = await db.collection('filaments').findOne({ '_id': ObjectId(id) })
 
-        let filament = userData.filaments.find(f => f.id.toString() === id)
 
         if (filament) {
             res.status(200).json(filament);
