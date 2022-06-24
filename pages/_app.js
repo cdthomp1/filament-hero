@@ -7,10 +7,14 @@ import { UserProvider } from '@auth0/nextjs-auth0';
 function MyApp({ Component, pageProps }) {
   return (
     <UserProvider>
-      <Navigation />
-      <Toast />
-      <Component {...pageProps} />
-      {/* <Footer /> */}
+      <div className="flex flex-col h-screen">
+        <Navigation />
+        <Toast />
+        <div className='flex-grow'>
+          <Component {...pageProps} />
+        </div>
+        <Footer />
+      </div>
     </UserProvider>
   );
 }

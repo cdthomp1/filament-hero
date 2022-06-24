@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/* const mongoose = require('mongoose');
 const Printer = require('../models/Printers');
 
 const connectDB = async () => {
@@ -25,19 +25,19 @@ export default async (req, res) => {
         if (printer) {
 
             printer.name = name,
-            printer.make = make,
-            printer.model = model,
-            printer.bedWidth = bedWidth,
-            printer.bedLength = bedLength,
-            printer.buildHeight = buildHeight,
-            printer.description = description,
-            printer.currentFilament = `${currentFilament}`
+                printer.make = make,
+                printer.model = model,
+                printer.bedWidth = bedWidth,
+                printer.bedLength = bedLength,
+                printer.buildHeight = buildHeight,
+                printer.description = description,
+                printer.currentFilament = `${currentFilament}`
             printer.status = status,
-            // image = image,
-            printer.notes = notes
+                // image = image,
+                printer.notes = notes
 
             const updatedPrinter = await printer.save()
-            res.status(200).json({message: 'All Done!'})
+            res.status(200).json({ message: 'All Done!' })
         } else {
             res.status(404).json({ message: "Printer not found 😩" })
         }
@@ -48,4 +48,4 @@ export default async (req, res) => {
     }
 
 
-}
+} */

@@ -1,32 +1,36 @@
-import Filament from '../models/Filament';
-import connectDB from '../../../lib/connectDb';
-
+import { ObjectId } from "mongodb";
+import clientPromise from "../../../lib/connectDb"
+import Filament from "../models/Filament";
 export default async (req, res) => {
-    try {
-        await connectDB();
-        const jsonBody = JSON.parse(req.body);
-        const newFilament = new Filament({
-            brand: jsonBody.brand,
-            type: jsonBody.type,
-            color: jsonBody.color,
-            length: jsonBody.length,
-            diameter: jsonBody.diameter,
-            weight: jsonBody.weight,
-            printingNozelTemp: jsonBody.printingNozelTemp,
-            printingBedTemp: jsonBody.printingBedTemp,
-            maxOverHangDistance: jsonBody.maxOverHangDistance,
-            maxOverHangAngle: jsonBody.maxOverHangAngle,
-            purchaseDate: jsonBody.purchaseDate,
-            purchasePrice: jsonBody.purchasePrice,
-            purchaseLocation: jsonBody.purchaseLocation,
-            generalNotes: jsonBody.notes,
-            picture: jsonBody.picture,
-            userId: jsonBody.userId
-        });
-        const createdFilament = await newFilament.save()
-        res.status(200).json(createdFilament)
-    }
-    catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack })
-    }
+    const client = await clientPromise;
+    const db = client.db("filamenttracker");
+    const jsonBody = JSON.parse(req.body);
+
+    var userId = jsonBody.userId
+    console.log('userId', userId)
+
+    const newFilament = new Filament(
+        new ObjectId(),
+        jsonBody.brand,
+        jsonBody.type,
+        jsonBody.color,
+        jsonBody.diameter,
+        jsonBody.weight,
+        jsonBody.printingNozelTemp,
+        jsonBody.printingBedTemp,
+        jsonBody.maxOverHangDistance,
+        jsonBody.maxOverHangAngle,
+        jsonBody.purchaseDate,
+        jsonBody.purchasePrice,
+        jsonBody.purchaseLocation,
+        jsonBody.notes,
+        jsonBody.userId
+    );
+
+    await db.collection('filaments').insertOne(newFilament);
+
+    let data = await db.collection('filaments').find({ 'userId': userId }).toArray();
+
+    res.status(200).json(data);
+
 }

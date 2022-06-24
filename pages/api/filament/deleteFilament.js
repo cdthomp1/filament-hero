@@ -1,4 +1,4 @@
-import Filament from '../models/Filament';
+/* import Filament from '../models/Filament';
 import connectDB from '../../../lib/connectDb';
 
 export default async (req, res) => {
@@ -11,4 +11,4 @@ export default async (req, res) => {
     } else {
         res.status(404).json({ message: "Filament not found 😩" })
     }
-}
+} */

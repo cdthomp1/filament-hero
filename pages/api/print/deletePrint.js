@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/* const mongoose = require('mongoose');
 const Print = require('../models/Print')
 
 const connectDB = async () => {
@@ -27,4 +27,4 @@ export default async (req, res) => {
     }
 
 
-}
+} */

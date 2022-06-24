@@ -4,8 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { fetcher, dirtyFetcher } from '../../lib/fetchers'
 import { notifySuccess, notifyError } from '../../lib/toasts';
+import { useRouter } from 'next/router'
+
 
 const PrintForm = ({ user, filamentsData, printersData }) => {
+    const router = useRouter();
+
     const [addFormData, setAddFormData] = useState({
         name: "",
         printer: "",
@@ -79,7 +83,15 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
 
         var printFilament = await fetcher("/api/filament/getFilament?id=" + newPrint.filamentId)
         var updatedFilament = {
-            ...printFilament,
+            brand: printFilament.brand,
+            type: printFilament.type,
+            color: printFilament.color,
+            length: printFilament.length,
+            diameter: printFilament.diameter,
+            printingNozelTemp: printFilament.printingNozelTemp,
+            printingBedTemp: printFilament.printingBedTemp,
+            maxOverHangDistance: printFilament.maxOverHangDistance,
+            maxOverHangAngle: printFilament.maxOverHangAngle,
             weight: printFilament.weight - newPrint.weight,
         }
 
@@ -96,7 +108,9 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
 
         if (res.status === 200) {
             notifySuccess('Print Created! 🎉');
-            event.target.reset()
+            router.push({
+                pathname: '/prints',
+            })
         }
     };
 
@@ -134,7 +148,7 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
                     <select type="text" name="filamentId" className="border w-72" onChange={handleAddFormChange} >
                         <option value="">Filament</option>
                         {filamentsData.map((filament, index) => {
-                            return (<option key={index} value={filament._id}>{`${filament.type} ${filament.color}`}</option>)
+                            return (<option key={index} value={filament._id}>{`${filament.brand} ${filament.type} ${filament.color}`}</option>)
                         })}
                     </select>
                 </div>
