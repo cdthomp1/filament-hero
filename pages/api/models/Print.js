@@ -1,62 +1,22 @@
-import mongoose from 'mongoose';
-mongoose.Promise = global.Promise;
-
-
-const printSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    printer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'printer',
-        required: true
-    },
-    stlUrl: {
-        type: String,
-    },
-    estPrintTime: {
-        type: Number,
-    },
-    actPrintTime: {
-        type: String,
-    },
-    filamentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'filament',
-        required: true
-    },
-    notes: {
-        type: String,
-    },
-    status: {
-        type: String,
-    },
-    partId: {
-        type: String,
-    },
-    settingsId: {
-        type: String,
-    },
-    nozelSize: {
-        type: Number,
-    },
-    filamentLength: {
-        type: Number,
-    },
-    weight: {
-        type: String,
-    },
-    date: {
-        type: Date,
-    },
-    userId: {
-        type: String
+class Print {
+    constructor(id, name, printer, stlUrl, estPrintTime, actPrintTime, filamentId, notes, status, partId, settingsId, nozelSize, filamentLength, weight, date, userId) {
+        this.id = id;
+        this.name = name;
+        this.printer = printer;
+        this.stlUrl = stlUrl;
+        this.estPrintTime = estPrintTime;
+        this.actPrintTime = actPrintTime;
+        this.filamentId = filamentId;
+        this.notes = notes;
+        this.status = status;
+        this.partId = partId;
+        this.settingsId = settingsId;
+        this.nozelSize = nozelSize;
+        this.filamentLength = filamentLength;
+        this.weight = weight;
+        this.date = date;
+        this.userId = userId;
     }
-},
-    {
-        timestamps: true,
-    })
+}
 
-// Do I have a model already? Make a new one if I don't
-module.exports = mongoose.models.print || mongoose.model('print', printSchema);
+export default Print

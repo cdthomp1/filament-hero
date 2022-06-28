@@ -198,7 +198,7 @@ export default function PrintsTable({ user }) {
                                         </td>
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
                                             <div className="flex item-center justify-center">
-                                                <span className="font-medium">{`${print?.filament?.brand} ${print?.filament?.type} ${print?.filament?.color}`}</span>
+                                                <span className="font-medium">{print?.filament?.deleted ? "Filament Deleted" : `${print?.filament?.brand} ${print?.filament?.type} ${print?.filament?.color}`}</span>
                                             </div>
                                         </td>
                                         {/* <td className="py-3 px-6 text-center whitespace-nowrap">

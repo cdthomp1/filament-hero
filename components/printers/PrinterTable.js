@@ -212,7 +212,7 @@ const PrinterTable = ({ user, filamentsData }) => {
 
                                     <td className="py-3 px-6 text-center">
                                         <div className="flex item-center justify-center">
-                                            {printer.currentFilament === null ? <></> : <a href="#" className="text-purple-600">{`${printer.currentFilament.brand} ${printer.currentFilament.type} ${printer.currentFilament.color}`}</a>}
+                                            {printer.currentFilament === null ? <></> : <a href="#" className="text-purple-600">{printer?.currentFilament?.deleted ? "Filament Deleted" : `${printer.currentFilament.brand} ${printer.currentFilament.type} ${printer.currentFilament.color}`}</a>}
                                         </div>
                                     </td>
                                     <td className="py-3 px-6 text-center">

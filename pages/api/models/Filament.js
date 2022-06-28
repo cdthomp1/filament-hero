@@ -1,7 +1,7 @@
 class Filament {
     constructor(id, brand, type, color, diameter, weight, printingNozelTemp, printingBedTemp, maxOverHangDistance, maxOverHangAngle, purchaseDate, purchasePrice, purchaseLocation, generalNotes) {
-        this.id = id,
-            this.brand = brand;
+        this.id = id;
+        this.brand = brand;
         this.type = type;
         this.color = color;
         this.diameter = diameter;
