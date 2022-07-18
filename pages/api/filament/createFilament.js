@@ -14,6 +14,7 @@ export default async (req, res) => {
         jsonBody.brand,
         jsonBody.type,
         jsonBody.color,
+        jsonBody.colorCode,
         jsonBody.diameter,
         jsonBody.weight,
         jsonBody.printingNozelTemp,
