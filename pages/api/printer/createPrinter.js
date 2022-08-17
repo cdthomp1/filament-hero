@@ -1,31 +1,34 @@
-/* const mongoose = require('mongoose');
-const Printer = require('../models/Printers');
-import { MongoClient } from "mongodb";
-
-
-const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
-            useUnifiedTopology: true,
-            useNewUrlParser: true,
-            useCreateIndex: true
-        })
-    } catch (err) {
-        process.exit(1);
-    }
-}
-
+import { ObjectId } from "mongodb";
+import clientPromise from "../../../lib/connectDb";
+import Printer from "../models/Printer";
 export default async (req, res) => {
-    try {
-        await connectDB();
-        const newPrinter = new Printer(JSON.parse(req.body))
+  try {
+    const client = await clientPromise;
+    const db = client.db("filamenttracker");
+    const jsonBody = JSON.parse(req.body);
 
-        const createdPrinter = await newPrinter.save()
+    var userId = jsonBody.userId;
+    console.log("userId", userId);
 
+    const newPrinter = new Printer(
+      new ObjectId(),
+      jsonBody.name,
+      jsonBody.make,
+      jsonBody.model,
+      jsonBody.bedWidth,
+      jsonBody.bedLength,
+      jsonBody.buildHeight,
+      jsonBody.description,
+      jsonBody.status,
+      jsonBody.notes,
+      jsonBody.userId
+      // jsonBody.image
+    );
 
-        res.status(200).json(createdPrinter)
+    let data = await db.collection("printers").insertOne(newPrinter);
 
-    } catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack })
-    }
-} */
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message, stack: error.stack });
+  }
+};

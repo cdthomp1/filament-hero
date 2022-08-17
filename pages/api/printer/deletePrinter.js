@@ -1,32 +1,22 @@
-/* const mongoose = require('mongoose');
-const Printer = require('../models/Printers')
-
-const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
-            useUnifiedTopology: true,
-            useNewUrlParser: true,
-            useCreateIndex: true
-        })
-
-    } catch (err) {
-        process.exit(1);
-    }
-}
+import { ObjectId } from "mongodb";
+import clientPromise from "../../../lib/connectDb";
 
 export default async (req, res) => {
+  try {
+    const client = await clientPromise;
+    const db = client.db("filamenttracker");
+    const jsonBody = JSON.parse(req.body);
 
-
-    const { id } = JSON.parse(req.body)
-
-    const foundPrinter = await Printer.findById(id)
-
-    if (foundPrinter) {
-        await foundPrinter.remove()
-        res.status(200).json({ message: "Printer Successfully Deleted 🎉" })
+    const result = await db
+      .collection("printers")
+      .remove({ _id: ObjectId(jsonBody.id) }, { justOne: true });
+    if (result.modifiedCount > 0) {
+      res.status(200).json({ message: "Printer Successfully Deleted 🎉" });
     } else {
-        res.status(404).json({ message: "Printer not found 😩" })
+      res.status(404).json({ message: "Printer not found 😩" });
     }
-
-
-} */
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong on the server 😫" });
+  }
+};
