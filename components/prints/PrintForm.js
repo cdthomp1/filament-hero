@@ -79,9 +79,10 @@ const PrintForm = ({ user, filamentsData, printersData }) => {
                 date: Date.now(),
                 userId: user.sub
             };
+            console.log('newPrint', newPrint)
         }
 
-        var printFilament = await fetcher("/api/filament/getFilament?id=" + newPrint.filamentId)
+        var printFilament = await fetcher("/api/filament/getFilament?filamentId=" + newPrint.filamentId)
         var updatedFilament = {
             brand: printFilament.brand,
             type: printFilament.type,

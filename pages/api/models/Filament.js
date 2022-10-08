@@ -1,9 +1,10 @@
 class Filament {
-    constructor(id, brand, type, color, diameter, weight, printingNozelTemp, printingBedTemp, maxOverHangDistance, maxOverHangAngle, purchaseDate, purchasePrice, purchaseLocation, generalNotes) {
-        this.id = id,
-            this.brand = brand;
+    constructor(id, brand, type, color, colorCode, diameter, weight, printingNozelTemp, printingBedTemp, maxOverHangDistance, maxOverHangAngle, purchaseDate, purchasePrice, purchaseLocation, generalNotes, userId) {
+        this.id = id;
+        this.brand = brand;
         this.type = type;
         this.color = color;
+        this.colorCode = colorCode;
         this.diameter = diameter;
         this.weight = weight;
         this.printingNozelTemp = printingNozelTemp;
@@ -14,6 +15,7 @@ class Filament {
         this.purchasePrice = purchasePrice;
         this.purchaseLocation = purchaseLocation;
         this.generalNotes = generalNotes;
+        this.userId = userId
     }
 }
 

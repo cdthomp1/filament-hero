@@ -6,8 +6,10 @@ export default async (req, res) => {
         const client = await clientPromise
         const db = client.db("filamenttracker")
         var id = req.query.userId
+
         const filaments = await db.collection('filaments').find({ 'userId': id }).toArray();
-        res.status(200).json(filaments);
+        const filteredFilaments = filaments.filter(f => !f.deleted)
+        res.status(200).json(filteredFilaments);
 
 
     } catch (e) {
