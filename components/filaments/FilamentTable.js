@@ -74,9 +74,10 @@ export default function FilamentTable({ user }) {
     };
 
     const handleDeleteClick = async (filamentId) => {
-        const res = await dirtyFetcher("/api/filament/deleteFilament", {
+        const filament = filamentsData.find(f => f._id === filamentId)
+        const res = await dirtyFetcher("/api/filament/deleteFilament?id=" + filamentId, {
             method: "delete",
-            body: JSON.stringify({ id: filamentId })
+            body: JSON.stringify(filament)
         });
 
         if (res.status === 200) {

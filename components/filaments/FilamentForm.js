@@ -11,6 +11,7 @@ export default function FilamentForm({ user }) {
         brand: "",
         type: "",
         color: "",
+        colorCode: "",
         length: 0,
         diameter: 0,
         weight: 0,
@@ -41,6 +42,7 @@ export default function FilamentForm({ user }) {
                 brand: addFormData.brand,
                 type: addFormData.type,
                 color: addFormData.color,
+                colorCode: addFormData.colorCode,
                 length: addFormData.length,
                 diameter: addFormData.diameter,
                 weight: addFormData.weight,
@@ -50,7 +52,6 @@ export default function FilamentForm({ user }) {
                 maxOverHangAngle: addFormData.maxOverHangAngle,
                 notes: addFormData.notes,
                 userId: user.sub,
-                testProp: "THIS IS A TEST"
             };
         }
         var res = await dirtyFetcher("/api/filament/createFilament", {
@@ -84,6 +85,10 @@ export default function FilamentForm({ user }) {
                 <div className="py-3 px-6">
                     <label htmlFor="color" className="text-lg">Color</label><br />
                     <input type="text" name="color" className="border w-72" onChange={handleAddFormChange} />
+                </div>
+                <div className="py-3 px-6">
+                    <label htmlFor="color" className="text-lg">Color Code</label><br />
+                    <input type="color" name="colorCode" className="border w-72" onChange={handleAddFormChange} />
                 </div>
                 <div className="py-3 px-6">
                     <label htmlFor="weight" className="text-lg">Weight</label><br />

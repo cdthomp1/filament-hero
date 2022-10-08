@@ -6,17 +6,21 @@ export default async (req, res) => {
 
         const client = await clientPromise
         const db = client.db("filamenttracker")
-        var id = req.query.userId
-        //var id = 'google-oauth2|113159839716783009469'
-        if (id) {
-            const allPrints = await db.collection('prints').find({ userId: id }).toArray();
+        const userId = req.query.userId
+
+        if (userId) {
+            const allPrints = await db.collection('prints').find({ userId }).toArray();
 
             const mappedPrints = await Promise.all(allPrints.map(async (print) => {
-                const tempFilament = await db.collection('filaments').findOne({ "_id": ObjectId(print.filamentId.toString()) });
-                const tempPrinter = await db.collection('printers').findOne({ "_id": ObjectId(print.printer.toString()) })
+                const tempFilament = await db.collection('filaments').findOne({ "_id": ObjectId(print.filamentId) });
+                const tempPrinter = await db.collection('printers').findOne({
+                    "_id": ObjectId(print.printer)
+                })
                 return { ...print, filament: tempFilament, printer: tempPrinter };
             }))
-            res.status(200).json(mappedPrints);
+            const filteredPrints = mappedPrints.filter(p => !p.deleted);
+
+            res.status(200).json(filteredPrints);
         } else {
             res.status(400).json({ message: "User ID not found 😩" })
         }

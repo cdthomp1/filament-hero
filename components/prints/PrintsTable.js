@@ -88,9 +88,10 @@ export default function PrintsTable({ user }) {
     };
 
     const handleDeleteClick = async (printId) => {
-        const res = await dirtyFetcher("/api/print/deletePrint", {
+        const print = printsData.find(p => p._id === printId)
+        const res = await dirtyFetcher("/api/print/deletePrint?id=" + printId, {
             method: "delete",
-            body: JSON.stringify({ id: printId })
+            body: JSON.stringify(print)
         });
 
         if (res.status === 200) {
@@ -198,7 +199,7 @@ export default function PrintsTable({ user }) {
                                         </td>
                                         <td className="py-3 px-6 text-center whitespace-nowrap">
                                             <div className="flex item-center justify-center">
-                                                <span className="font-medium">{`${print?.filament?.brand} ${print?.filament?.type} ${print?.filament?.color}`}</span>
+                                                <span className="font-medium">{print?.filament?.deleted ? "Filament Deleted" : `${print?.filament?.brand} ${print?.filament?.type} ${print?.filament?.color}`}</span>
                                             </div>
                                         </td>
                                         {/* <td className="py-3 px-6 text-center whitespace-nowrap">
