@@ -7,14 +7,15 @@ export default async (req, res) => {
         const client = await clientPromise
         const db = client.db("filamenttracker")
         const userId = req.query.userId
-
+        console.log(userId)
         if (userId) {
-            const allPrints = await db.collection('prints').find({ userId }).toArray();
+            const allPrints = await db.collection('prints').find({ 'userId': userId }).toArray();
 
             const mappedPrints = await Promise.all(allPrints.map(async (print) => {
-                const tempFilament = await db.collection('filaments').findOne({ "_id": ObjectId(print.filamentId) });
+                console.log(print)
+                const tempFilament = await db.collection('filaments').findOne({ "_id": print.filamentId });
                 const tempPrinter = await db.collection('printers').findOne({
-                    "_id": ObjectId(print.printer)
+                    "_id": print.printer
                 })
                 return { ...print, filament: tempFilament, printer: tempPrinter };
             }))
